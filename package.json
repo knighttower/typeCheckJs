@@ -1,0 +1,14 @@
+{
+    "name": "tiny-js-typecheck",
+    "version": "0.0.1",
+    "description": "Tiny JS TypeCheck",
+    "main": "index.js",
+    "scripts": {
+        "test": "vitest"
+    },
+    "dependencies": {
+        "@knighttower/js-utility-functions": "^1.1.7",
+        "jsdom": "^22.1.0",
+        "vitest": "^0.34.5"
+    }
+}
