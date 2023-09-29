@@ -36,25 +36,25 @@ Possible type patterns:
 '[{key1: type, any: type}]'
 
 
-// Builder Object 
+// Builder Object gets a Map() with the following keys. For nested maps, the same keys are used.
 for basic types
-{
+Map(){
     testMethod: basic,
     tests: [test1, test2, test3],
 }
 
 for array
-{
+Map(){
     testMethod: array,
     tests: [test1, test2, test3],
 }
 
 for object
-{
+Map(){
     testMethod: object,
-    tests: [test1, test2, test3],
+    tests: Map(test1, test2, test3),
     optionalKeys: [],// keys that are optional and may not tested if not found
-    testFew: [], // when 'Any' is in the test, testFew will be used to test the keys here and all other "Any"
+    testFew: [], // when 'Any' is in the test, testFew will be used to test the keys here and all other with Any"
     testAllAny: boolean, // it will test all keys with the 'any' test
-    testOnly: [], // when this is set, only this keys will be tested. It works when the test has '...'
+    testOnly: boolean, // when this is set, only this keys will be tested. It works when the test has '...'
 }

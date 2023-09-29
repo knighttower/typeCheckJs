@@ -76,65 +76,6 @@ const basicTypes = (typeStr) => {
 };
 
 /**
- * Handle object types
- * @param {string} strExp
- * @return {object} tests
- */
-// const objectTypes = (strExp) => {
-//     return new (class handleObjects {
-//         constructor(strExp) {
-//             this.testUnit = {
-//                 tests: {},
-//                 optionalKeys: [],
-//                 testFew: [],
-//                 testAllAny: false,
-//                 testOnly: false,
-//             };
-
-//             return this.handleObject();
-//         }
-//         splitKeyAndType(str) {
-//             return str.split(':').map((t) => t.trim());
-//         }
-//         checkOptionalKey(key) {
-//             if (key.endsWith('?')) {
-//                 key = key.slice(0, -1);
-//                 this.testUnit.optionalKeys.push(key);
-//             }
-//             return key;
-//         }
-//         checkTheAnyKey(obj) {
-//             if ('any' in obj) {
-//                 const keys = Object.keys(obj);
-//                 if (keys.length === 1) {
-//                     this.testUnit.testAllAny = true;
-//                 } else {
-//                     this.testUnit.testFew = keys.filter((key) => key !== 'any');
-//                 }
-//             }
-//         }
-//         handleObject() {
-//             const convertedObj = getArrObjFromString(strExp);
-//             this.checkTheAnyKey(convertedObj);
-//             for (const key in convertedObj) {
-//                 const cleanKey = this.checkOptionalKey(key);
-//                 const value = convertedObj[key];
-
-//                 if (value === '...') {
-//                     delete convertedObj[key];
-//                     this.testUnit.testOnly = true;
-//                     continue;
-//                 }
-
-//                 this.testUnit.tests[cleanKey] = testBuilder(value);
-//             }
-
-//             return this.testUnit;
-//         }
-//     })(strExp);
-// };
-
-/**
  * Handle array types
  * @param {string} strExp
  * @return {array} tests
@@ -147,9 +88,15 @@ const arrayTypes = (strExp) => {
     });
     return testUnit;
 };
+
+/**
+ * Handle object types
+ * @param {string} strExp
+ * @return {object} tests
+ */
 const objectTypes = (strExp) => {
     return new (class handleObjects {
-        constructor(strExp) {
+        constructor() {
             this.testUnit = new Map([
                 ['tests', new Map()],
                 ['optionalKeys', []],
@@ -201,7 +148,7 @@ const objectTypes = (strExp) => {
 
             return this.testUnit;
         }
-    })(strExp);
+    })();
 };
 
 /**
@@ -214,27 +161,6 @@ const objectTypes = (strExp) => {
  * @example testBuilder('{any: number}') // returns {testMethod: 'object', tests: {any: [function]}}
  * @usage See more cases in the 'type-pattern.txt' file
  */
-// function testBuilder(strExp) {
-//     let testUnit = {
-//         testMethod: null,
-//         tests: null,
-//     };
-
-//     testUnit.testMethod = determineMethod(strExp);
-
-//     if (testUnit.testMethod === 'basic') {
-//         testUnit.tests = basicTypes(strExp);
-//     } else if (testUnit.testMethod === 'array') {
-//         testUnit.tests = arrayTypes(strExp);
-//     } else if (testUnit.testMethod === 'object') {
-//         testUnit = Object.assign({}, testUnit, objectTypes(strExp));
-//     } else {
-//         isNoType(strExp);
-//     }
-
-//     return testUnit;
-// }
-
 function testBuilder(strExp) {
     let testUnit = new Map([
         ['testMethod', determineMethod(strExp)],

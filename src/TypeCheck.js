@@ -7,52 +7,98 @@ const runBasicTest = (inputVal, tests) => {
 };
 
 const runArrayTest = (inputVal, tests) => {
+    // If the input is not an array, return false
     if (!typeOf(inputVal, 'array')) {
         return false;
     }
-
+    // Else, test each value in the array
     return tests.every((test, index) => {
-        // console.log('is array: ', values[index], test);
+        // console.log('is array: ', inputVal[index], test);
         return runRouteTest(inputVal[index], test);
     });
 };
+
+class HandleObjects {
+    constructor(inputVal, unitTest) {
+        this.testUnitKeys = [...unitTest.get('tests').keys()];
+        this.testOnly = unitTest.get('testOnly');
+        this.testFew = unitTest.get('testFew');
+        this.testAllAny = unitTest.get('testAllAny');
+        this.optionalKeys = unitTest.get('optionalKeys');
+        this.testCollection = unitTest.get('tests');
+        // the input object to test
+        this.inputObject = inputVal;
+    }
+
+    handleUnitTest() {
+        switch (true) {
+            case this.testAllAny:
+                return this.testObjAllAny();
+            case !isEmpty(this.testFew):
+                // =========================================
+                // --> TODO
+                // --------------------------
+
+                // @TODO here
+                return this.testObjFew();
+                break;
+            case !this.testOnly:
+                console.log('testOnly');
+                for (const k in this.inputObject) {
+                    if (this.testCollection.has(k)) {
+                        return false;
+                    }
+                }
+
+                break;
+        }
+
+        return this.defaultTest();
+    }
+
+    filterInputObject() {
+        this.inputObject = Object.fromEntries(
+            Object.entries(this.testCollection).filter(([key]) => this.testFew.includes(key)),
+        );
+    }
+
+    testObjFew() {
+        return this.testFew.every((key) => {
+            const test = this.testCollection.get(key);
+            const testValue = this.inputObject[key];
+
+            return runRouteTest(testValue, test);
+        });
+    }
+
+    testObjAllAny() {
+        return Object.values(this.inputObject).every((value) => {
+            return runRouteTest(value, this.testCollection.get('any'));
+        });
+    }
+    defaultTest() {
+        return this.testUnitKeys.every((key) => {
+            const test = this.testCollection.get(key);
+            const testValue = this.inputObject[key];
+
+            return runRouteTest(testValue, test);
+        });
+    }
+}
 
 const runObjectTest = (inputVal, unitTest) => {
     if (!typeOf(inputVal, 'object')) {
         return false;
     }
-    // collect the keys from the unitTest
-    const testUnitKeys = Object.keys(unitTest.tests);
-    // collection of tests for each key
-    let testCollection = unitTest.tests;
-    // the input object to test
-    let inputObject = inputVal;
-    // console.table(testCollection);
-    // First check if it should test only
-    if (!unitTest.testOnly && !isEmpty(unitTest.testFew && !unitTest.testAllAny)) {
-        for (const k of testUnitKeys) {
-            if (!inputObject[k]) {
-                return false;
-            }
-        }
-    } else {
-        inputObject = Object.fromEntries(Object.entries(inputObject).filter(([key]) => testUnitKeys.includes(key)));
-    }
-
-    return testUnitKeys.every((key) => {
-        const test = testCollection[key];
-        const testValue = inputObject[key];
-
-        return runRouteTest(testValue, test);
-    });
+    return new HandleObjects(inputVal, unitTest).handleUnitTest();
 };
 
 function runRouteTest(inputVal, unitTest) {
-    switch (unitTest.testMethod) {
+    switch (unitTest.get('testMethod')) {
         case 'basic':
-            return runBasicTest(inputVal, unitTest.tests);
+            return runBasicTest(inputVal, unitTest.get('tests'));
         case 'array':
-            return runArrayTest(inputVal, unitTest.tests);
+            return runArrayTest(inputVal, unitTest.get('tests'));
         case 'object':
             return runObjectTest(inputVal, unitTest);
         default:
@@ -62,7 +108,7 @@ function runRouteTest(inputVal, unitTest) {
 
 const typeCheck = (typeExp, inputVal) => {
     const unitTest = testBuilder(typeExp);
-    // console.log('init', value);
+    // console.log('init', inputVal);
     return runRouteTest(inputVal, unitTest);
 };
 
