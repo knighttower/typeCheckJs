@@ -1,118 +1,81 @@
-const types = [
-    {
-        type: 'number',
-        validate: function (_var_) {
-            return typeof _var_ === 'number' && isFinite(_var_);
-        },
-    },
-    {
-        type: 'int',
-        validate: function (_var_) {
-            return !isNaN(_var_) && _var_ % 1 === 0;
-        },
-    },
-    {
-        type: 'float',
-        validate: function (_var_) {
-            return typeof _var_ === 'number' && isFinite(_var_) && _var_ % 1 !== 0;
-        },
-    },
-    {
-        type: 'date',
-        validate: function (_var_) {
-            return _var_ instanceof Date && !isNaN(_var_.getTime());
-        },
-    },
-    {
-        type: 'object',
-        validate: function (_var_) {
-            return _var_ !== null && typeof _var_ === 'object' && !Array.isArray(_var_);
-        },
-    },
-    {
-        type: 'string',
-        validate: function (_var_) {
-            return typeof _var_ === 'string';
-        },
-    },
-    {
-        type: 'boolean',
-        validate: function (_var_) {
-            return typeof _var_ === 'boolean';
-        },
-    },
-    {
-        type: 'function',
-        validate: function (_var_) {
-            return typeof _var_ === 'function';
-        },
-    },
-    {
-        type: 'null',
-        validate: function (_var_) {
-            return _var_ === null;
-        },
-    },
-    {
-        type: 'undefined',
-        validate: function (_var_) {
-            return typeof _var_ === 'undefined';
-        },
-    },
-    {
-        type: 'regExp',
-        validate: function (_var_) {
-            return _var_ instanceof RegExp;
-        },
-    },
-    {
-        type: 'symbol',
-        validate: function (_var_) {
-            return typeof _var_ === 'symbol';
-        },
-    },
-    {
-        type: 'bigInt',
-        validate: function (_var_) {
-            return typeof _var_ === 'bigint';
-        },
-    },
-    {
-        type: 'set',
-        validate: function (_var_) {
-            return _var_ instanceof Set;
-        },
-    },
-    {
-        type: 'map',
-        validate: function (_var_) {
-            return _var_ instanceof Map;
-        },
-    },
-    {
-        type: 'array',
-        validate: function (_var_) {
-            return Array.isArray(_var_);
-        },
-    },
-    {
-        type: 'promise',
-        validate: function (_var_) {
-            return _var_ instanceof Promise;
-        },
-    },
-    {
-        type: 'weakMap',
-        validate: function (_var_) {
-            return _var_ instanceof WeakMap;
-        },
-    },
-    {
-        type: 'weakSet',
-        validate: function (_var_) {
-            return _var_ instanceof WeakSet;
-        },
-    },
-];
+import { typeOf } from '@knighttower/js-utility-functions';
 
-export { types, types as default };
+export const types = {
+    array: {
+        type: 'array',
+        validate: (_var_) => typeOf(_var_, 'array'),
+    },
+
+    bigInt: {
+        type: 'bigInt',
+        validate: (_var_) => typeof _var_ === 'bigint',
+    },
+    boolean: {
+        type: 'boolean',
+        validate: (_var_) => typeof _var_ === 'boolean',
+    },
+    date: {
+        type: 'date',
+        validate: (_var_) => _var_ instanceof Date,
+    },
+    float: {
+        type: 'float',
+        validate: (_var_) => typeof _var_ === 'number' && !Number.isInteger(_var_),
+    },
+    function: {
+        type: 'function',
+        validate: (_var_) => typeof _var_ === 'function',
+    },
+    int: {
+        type: 'int',
+        validate: (_var_) => Number.isInteger(_var_),
+    },
+    map: {
+        type: 'map',
+        validate: (_var_) => _var_ instanceof Map,
+    },
+    null: {
+        type: 'null',
+        validate: (_var_) => _var_ === null,
+    },
+    number: {
+        type: 'number',
+        validate: (_var_) => typeof _var_ === 'number',
+    },
+    object: {
+        type: 'object',
+        validate: (_var_) => typeOf(_var_, 'object'),
+    },
+    promise: {
+        type: 'promise',
+        validate: (_var_) => _var_ instanceof Promise,
+    },
+    regExp: {
+        type: 'regExp',
+        validate: (_var_) => _var_ instanceof RegExp,
+    },
+    set: {
+        type: 'set',
+        validate: (_var_) => _var_ instanceof Set,
+    },
+    string: {
+        type: 'string',
+        validate: (_var_) => typeof _var_ === 'string',
+    },
+    symbol: {
+        type: 'symbol',
+        validate: (_var_) => typeof _var_ === 'symbol',
+    },
+    undefined: {
+        type: 'undefined',
+        validate: (_var_) => typeof _var_ === 'undefined',
+    },
+    weakMap: {
+        type: 'weakMap',
+        validate: (_var_) => _var_ instanceof WeakMap,
+    },
+    weakSet: {
+        type: 'weakSet',
+        validate: (_var_) => _var_ instanceof WeakSet,
+    },
+};

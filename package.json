@@ -7,7 +7,9 @@
         "test": "vitest"
     },
     "dependencies": {
-        "@knighttower/js-utility-functions": "^1.1.7",
+        "@knighttower/js-utility-functions": "^2.1.4"
+    },
+    "devDependencies": {
         "jsdom": "^22.1.0",
         "vitest": "^0.34.5"
     }

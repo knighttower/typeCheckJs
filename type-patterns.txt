@@ -36,6 +36,25 @@ Possible type patterns:
 '[{key1: type, any: type}]'
 
 
-[[[][]]]
+// Builder Object 
+for basic types
+{
+    testMethod: basic,
+    tests: [test1, test2, test3],
+}
 
-'[__2,__3]'
+for array
+{
+    testMethod: array,
+    tests: [test1, test2, test3],
+}
+
+for object
+{
+    testMethod: object,
+    tests: [test1, test2, test3],
+    optionalKeys: [],// keys that are optional and may not tested if not found
+    testFew: [], // when 'Any' is in the test, testFew will be used to test the keys here and all other "Any"
+    testAllAny: boolean, // it will test all keys with the 'any' test
+    testOnly: [], // when this is set, only this keys will be tested. It works when the test has '...'
+}

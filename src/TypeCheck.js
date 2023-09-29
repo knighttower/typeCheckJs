@@ -1,68 +1,69 @@
+import { typeOf, isEmpty } from '@knighttower/js-utility-functions';
 import { testBuilder } from './TestBuilder';
-const runSingleTests = (value, tests) => {
-    return tests.some((test) => test(value));
+
+const runBasicTest = (inputVal, tests) => {
+    // console.log('basic: ', value, tests);
+    return tests.some((test) => test(inputVal));
 };
 
-const runArrayTests = (value, tests) => {
-    if (!Array.isArray(value)) {
+const runArrayTest = (inputVal, tests) => {
+    if (!typeOf(inputVal, 'array')) {
         return false;
     }
 
-    for (let i = 0; i < value.length; i++) {
-        const element = value[i];
-        const testsForIndex = tests[i.toString()] || tests['any'];
-
-        if (!testsForIndex.some((test) => test(element))) {
-            return false;
-        }
-    }
-
-    return true;
+    return tests.every((test, index) => {
+        // console.log('is array: ', values[index], test);
+        return runRouteTest(inputVal[index], test);
+    });
 };
 
-const runObjectTests = (value, tests, optionalKeys, allowExtraKeys) => {
-    if (typeof value !== 'object' || value === null) {
+const runObjectTest = (inputVal, unitTest) => {
+    if (!typeOf(inputVal, 'object')) {
         return false;
     }
-
-    const keys = Object.keys(value);
-
-    for (const key of keys) {
-        if (!tests.hasOwnProperty(key)) {
-            if (allowExtraKeys) {
-                continue;
+    // collect the keys from the unitTest
+    const testUnitKeys = Object.keys(unitTest.tests);
+    // collection of tests for each key
+    let testCollection = unitTest.tests;
+    // the input object to test
+    let inputObject = inputVal;
+    // console.table(testCollection);
+    // First check if it should test only
+    if (!unitTest.testOnly && !isEmpty(unitTest.testFew && !unitTest.testAllAny)) {
+        for (const k of testUnitKeys) {
+            if (!inputObject[k]) {
+                return false;
             }
-            return false;
         }
-
-        const testsForKey = tests[key];
-        if (!testsForKey.some((test) => test(value[key]))) {
-            return false;
-        }
+    } else {
+        inputObject = Object.fromEntries(Object.entries(inputObject).filter(([key]) => testUnitKeys.includes(key)));
     }
 
-    for (const key in tests) {
-        if (!optionalKeys.includes(key) && !keys.includes(key)) {
-            return false;
-        }
-    }
+    return testUnitKeys.every((key) => {
+        const test = testCollection[key];
+        const testValue = inputObject[key];
 
-    return true;
+        return runRouteTest(testValue, test);
+    });
 };
 
-const typeCheck = (typeStr, value) => {
-    const { testMethod, tests, optionalKeys, allowExtraKeys } = testBuilder(typeStr);
-
-    switch (testMethod) {
-        case 'single':
-            return runSingleTests(value, tests);
+function runRouteTest(inputVal, unitTest) {
+    switch (unitTest.testMethod) {
+        case 'basic':
+            return runBasicTest(inputVal, unitTest.tests);
         case 'array':
-            return runArrayTests(value, tests);
+            return runArrayTest(inputVal, unitTest.tests);
         case 'object':
-            return runObjectTests(value, tests, optionalKeys, allowExtraKeys);
+            return runObjectTest(inputVal, unitTest);
         default:
             return false;
     }
+}
+
+const typeCheck = (typeExp, inputVal) => {
+    const unitTest = testBuilder(typeExp);
+    // console.log('init', value);
+    return runRouteTest(inputVal, unitTest);
 };
 
 export { typeCheck, typeCheck as default };
