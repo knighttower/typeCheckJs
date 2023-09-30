@@ -13,16 +13,16 @@ import assert from 'assert';
 
 // console.log('______TEST______', typeCheck('[number, {any: string}, number]', [1, { x: 'string', y: 10, z: 20 }, 3]));
 
-console.log(
-    '______TEST______',
-    typeCheck('[number, {y: number, x: string, any: number}, number]', [1, { x: 'string', y: 10, z: 20 }, 3]),
-);
+// console.log(
+//     '______TEST______',
+//     typeCheck('[number, {y: number, x: string, any: number}, number]', [1, { x: 'string', y: 10, z: 20 }, 3]),
+// );
 // typeCheck('[number, {y: string, x: string}, number]', [1, { x: 'string', y: 10, z: 20 }, 3]);
 // console.log(
 //     '______TEST______',
 //     typeCheck('[number, {any: string, x: string}, number]', [1, { x: 'string', y: 10, z: 20 }, 3]),
 // );
-
+// console.log('______TEST______', typeCheck('{x: string, y: number, z?: number}', { x: 'string', y: 10 }));
 // Test for basic types
 test('basic Type: number', () => {
     // const { testMethod, tests } = testBuilder('number');

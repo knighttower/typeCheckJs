@@ -35,15 +35,18 @@ class HandleObjects {
             case this.testAllAny:
                 return this.testObjAllAny();
             case !isEmpty(this.testFew):
-                // =========================================
-                // --> TODO
-                // --------------------------
-
-                // @TODO here
-                return this.testObjFew();
-                break;
+                // test the testFew fist so that we can remove them from the inputObject
+                const testFewResults = this.testObjFew();
+                // remove the testFew from the inputObject
+                this.filterOutFew();
+                return testFewResults && this.testObjAllAny();
+            case !isEmpty(this.optionalKeys):
+                // test the optionalKeys fist so that we can remove them from the inputObject
+                const optionalKeysResults = this.testObjOptionalKeys();
+                // remove the optionalKeys from the inputObject
+                this.filterOutOptionalKeys();
+                return optionalKeysResults && this.defaultTest();
             case !this.testOnly:
-                console.log('testOnly');
                 for (const k in this.inputObject) {
                     if (this.testCollection.has(k)) {
                         return false;
@@ -56,10 +59,22 @@ class HandleObjects {
         return this.defaultTest();
     }
 
-    filterInputObject() {
+    filterOutOptionalKeys() {
+        this.testUnitKeys = this.testUnitKeys.filter((item) => !this.optionalKeys.includes(item));
+    }
+
+    filterOutFew() {
         this.inputObject = Object.fromEntries(
-            Object.entries(this.testCollection).filter(([key]) => this.testFew.includes(key)),
+            Object.entries(this.inputObject).filter(([key]) => !this.testFew.includes(key)),
         );
+    }
+
+    testObjOptionalKeys() {
+        return this.optionalKeys.every((key) => {
+            const test = this.testCollection.get(key);
+            const testValue = this.inputObject[key];
+            return !testValue ? true : runRouteTest(testValue, test);
+        });
     }
 
     testObjFew() {
@@ -76,11 +91,11 @@ class HandleObjects {
             return runRouteTest(value, this.testCollection.get('any'));
         });
     }
+
     defaultTest() {
         return this.testUnitKeys.every((key) => {
             const test = this.testCollection.get(key);
             const testValue = this.inputObject[key];
-
             return runRouteTest(testValue, test);
         });
     }
@@ -108,7 +123,7 @@ function runRouteTest(inputVal, unitTest) {
 
 const typeCheck = (typeExp, inputVal) => {
     const unitTest = testBuilder(typeExp);
-    // console.log('init', inputVal);
+    // console.log('init', inputVal, unitTest);
     return runRouteTest(inputVal, unitTest);
 };
 
