@@ -18,10 +18,10 @@ import assert from 'assert';
 //     typeCheck('[number, {y: number, x: string, any: number}, number]', [1, { x: 'string', y: 10, z: 20 }, 3]),
 // );
 // typeCheck('[number, {y: string, x: string}, number]', [1, { x: 'string', y: 10, z: 20 }, 3]);
-// console.log(
-//     '______TEST______',
-//     typeCheck('[number, {any: string, x: string}, number]', [1, { x: 'string', y: 10, z: 20 }, 3]),
-// );
+console.log(
+    '______TEST______',
+    typeCheck('[number, {any: number, x: string}, number]', [1, { x: 'string', y: 10, z: 20 }, 3]),
+);
 // console.log('______TEST______', typeCheck('{x: string, y: number, z?: number}', { x: 'string', y: 10 }));
 // Test for basic types
 test('basic Type: number', () => {
