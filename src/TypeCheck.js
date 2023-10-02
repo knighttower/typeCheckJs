@@ -153,12 +153,7 @@ class TypeChecker {
     runTest() {
         this.unitTest = testBuilder(this.typeExp);
         this.testResult = runRouteTest(this.inputVal, this.unitTest);
-        let result = this.testResult;
-
-        // Convert result to a Boolean object if it's a primitive boolean
-        if (typeof result === 'boolean') {
-            result = new Boolean(result);
-        }
+        let result = new Boolean(this.testResult);
 
         result.log = this.log.bind(this); // Attach the log method
         result.fail = this.fail.bind(this); // Attach the fail method

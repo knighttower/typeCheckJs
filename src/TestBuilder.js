@@ -22,11 +22,11 @@ function getPipedTypes(str) {
         }
         // lookup the test for the type and add it to the testsForKey array
         const typeObj = types[type];
-        const test = typeObj ? typeObj.validate : isNoType(type);
+        const test = typeObj ?? isNoType(type);
         if (test) testsForKey.push(test);
         // for optional types, add the tests for null and undefined
         if (itCanBeNull) {
-            testsForKey.push(types['null'].validate, types['undefined'].validate);
+            testsForKey.push(types['null'], types['undefined']);
         }
 
         return testsForKey;
