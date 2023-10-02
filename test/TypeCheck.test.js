@@ -3,253 +3,88 @@ import { test } from 'vitest';
 import { typeCheck } from '../src/TypeCheck';
 import assert from 'assert';
 
-// console.log('______TEST______', typeCheck('number', 'string'));
-// console.log('______TEST______', typeCheck('[number, number, string]', [1, 3, null]));
-
-// console.log(
-//     '______TEST______',
-//     typeCheck('[number, {any: string, x: string}, number]', [1, { x: 'string', y: 10, z: 20 }, 3]),
-// );
-
-// console.log('______TEST______', typeCheck('[number, {any: string}, number]', [1, { x: 'string', y: 10, z: 20 }, 3]));
-
-// console.log(
-//     '______TEST______',
-//     typeCheck('[number, {y: number, x: string, any: number}, number]', [1, { x: 'string', y: 10, z: 20 }, 3]),
-// );
 // typeCheck('[number, {y: string, x: string}, number]', [1, { x: 'string', y: 10, z: 20 }, 3]);
-console.log(
-    '______TEST______',
-    typeCheck('[number, {any: number, x: string}, number]', [1, { x: 'string', y: 10, z: 20 }, 3]),
-);
-// console.log('______TEST______', typeCheck('{x: string, y: number, z?: number}', { x: 'string', y: 10 }));
+// const customType = {x: 'string', y: 'number'};
+// console.log(
+//     '______TEST______',
+// typeCheck('{y: number, x: string}', { x: 'string', y: 10 }, ($this) => {
+//     console.log('__testLogHere__', $this);
+// }).log(),
+// );
+
 // Test for basic types
-test('basic Type: number', () => {
-    // const { testMethod, tests } = testBuilder('number');
-    // assert(testMethod === 'basic');
-    // assert.equal(tests.length, 1);
-    // assert(tests[0] === getTypeTests('number'));
+test('basic Type', () => {
+    assert.equal(typeCheck('number', 1), true);
+    assert.equal(typeCheck('number', 'str'), false);
+    assert.equal(typeCheck('string', 'str'), true);
+    assert.equal(typeCheck('string | null', 1), false);
+    assert.equal(typeCheck('string | null', null), true);
+    assert.equal(typeCheck('string?', null), true);
+    assert.equal(typeCheck('string?', undefined), true);
+    assert.equal(typeCheck('string?', 1), false);
+    assert.equal(typeCheck('number?', 2), true);
+    assert.equal(typeCheck('float', 1.2), true);
+    assert.equal(typeCheck('float', 1), false);
+    assert.equal(typeCheck('float', 'str'), false);
+    assert.equal(typeCheck('boolean', true), true);
+    assert.equal(typeCheck('object', {}), true);
+    assert.equal(typeCheck('object', []), false);
+    assert.equal(typeCheck('array', []), true);
+    assert.equal(typeCheck('array', {}), false);
+    assert.equal(typeCheck('null', null), true);
+    assert.equal(typeCheck('date', new Date()), true);
+    assert.equal(typeCheck('date', 'str'), false);
+    assert.equal(typeCheck('int', 1), true);
+    assert.equal(typeCheck('int', 1.2), false);
+    assert.equal(typeCheck('int', 'str'), false);
+    assert.equal(typeCheck('bigInt', 1), false);
+    assert.equal(typeCheck('bigInt', 1n), true);
+    assert.equal(typeCheck('map', new Map()), true);
+    assert.equal(typeCheck('map', {}), false);
+    assert.equal(typeCheck('promise', new Promise(() => {})), true);
+    assert.equal(typeCheck('promise', {}), false);
+    assert.equal(typeCheck('regExp', new RegExp()), true);
+    assert.equal(typeCheck('regExp', {}), false);
+    assert.equal(typeCheck('set', new Set()), true);
+    assert.equal(typeCheck('set', {}), false);
+    assert.equal(
+        typeCheck('function', () => {}),
+        true,
+    );
 });
 
-// test('basic Type: null', () => {
-//     const { testMethod, tests } = testBuilder('null');
+// Test for array types
+test('Array Type: [number]', () => {
+    assert.equal(typeCheck('[number]', [1]), true);
+    assert.equal(typeCheck('[number]', ['str']), false);
+    assert.equal(typeCheck('[number, number, string]', [1, 3, null]), false);
+    assert.equal(typeCheck('[number, {any: string, x: string}, number]', [1, { x: 'string', y: 10, z: 20 }, 3]), false);
+    assert.equal(typeCheck('[number, {any: string}, number]', [1, { x: 'string', y: 10, z: 20 }, 3]), false);
+    assert.equal(typeCheck('[number, {any: number, x: string}, number]', [1, { x: 'string', y: 10, z: 20 }, 3]), true);
+});
 
-//     assert(testMethod === 'basic');
-//     assert.equal(tests.length, 1);
-//     assert(tests[0] === getTypeTests('null'));
-// });
+// test objects
 
-// test('basic Type: string', () => {
-//     const { testMethod, tests } = testBuilder('string');
-//     assert(testMethod === 'basic');
-//     assert(tests.length === 1);
-//     assert(tests[0]('str') === true);
-//     assert(tests[0](1) === false);
-// });
+test('objects', () => {
+    assert.equal(typeCheck('{x: string, y: number, z?: number}', { x: 'string', y: 10 }), true);
+    assert.equal(typeCheck('{x: string, y: number, z?: number}', { x: 'string', y: 10, z: 20 }), true);
+    assert.equal(typeCheck('{x: string, y: number, z: number?}', { x: 'string', y: 10, z: 'str' }), false);
+    assert.equal(typeCheck('{x: string, y: number, ...}', { x: 'string', y: 10, z: 20 }), true);
+});
 
-// // Test for union types
-// test('Union Type: number | string', () => {
-//     const { testMethod, tests } = testBuilder('number | string');
-//     assert(testMethod === 'basic');
-//     assert(tests.length === 2);
-//     assert(tests.some((test) => test(1)));
-//     assert(tests.some((test) => test('str')));
-//     assert(!tests.every((test) => test(null)));
-// });
+// create tests for {key1: type}
+test('objects: {key: type}', () => {
+    assert.equal(typeCheck('{x: string, y: number}', { x: 'string', y: 10 }), true);
+    assert.equal(typeCheck('{x: string, y: number}', { x: 'string', y: 'str' }), false);
+    assert.equal(typeCheck('{x: string, y: number}', { x: 'string', y: 10, z: 20 }), false);
+    assert.equal(typeCheck('{x: string, y: number, ...}', { x: 'string', y: 10, z: 'str' }), true);
+    assert.equal(typeCheck('{x: string, y: number, any: number}', { x: 'string', y: 10, z: 20 }), true);
+});
 
-// // Test for optional types
-// test('Optional Type: number?', () => {
-//     const { testMethod, tests } = testBuilder('number?');
-//     assert(testMethod === 'basic');
-//     assert(tests.length === 3); // number, null, undefined
-//     assert(tests.some((test) => test(null)));
-//     assert(tests.some((test) => test(undefined)));
-//     assert(!tests.every((test) => test('str')));
-// });
-
-// // =========================================
-// // --> ARRAY TESTS
-// // --------------------------
-
-// // Test for array types
-// test('Array Type: [number]', () => {
-//     const { testMethod, tests } = testBuilder('[number]');
-//     assert(testMethod === 'array');
-//     // console.log(tests);
-//     assert(tests[0].tests[0](1) === true);
-//     assert(tests[0].tests[0]('str') === false);
-// });
-
-// test('Array Type: [number?]', () => {
-//     const { testMethod, tests } = testBuilder('[number?]');
-//     assert(testMethod === 'array');
-//     assert(tests[0].tests[0](1) === true);
-//     assert(tests[0].tests[0]('str') === false);
-//     assert(tests[0].tests[1](null) === true);
-// });
-
-// test('Array Type: [number | string]', () => {
-//     const { testMethod, tests } = testBuilder('[number | string]');
-//     assert(testMethod === 'array');
-//     assert(tests[0].tests.some((test) => test(1)));
-//     assert(tests[0].tests.some((test) => test('str')));
-//     assert(!tests[0].tests.every((test) => test(null)));
-// });
-
-// test('Array Type: [number | string, null]', () => {
-//     const { testMethod, tests } = testBuilder('[number | string, null]');
-//     assert(testMethod === 'array');
-//     assert(tests[0].tests.some((test) => test(1)));
-//     assert(tests[0].tests.some((test) => test('str')));
-//     assert(!tests[0].tests.every((test) => test(null)));
-//     assert(tests[1].tests.every((test) => test(null)));
-// });
-
-// test('Nester Array Type: [[number], [null]]', () => {
-//     const { testMethod, tests } = testBuilder('[[number], [null | string]]');
-//     assert(testMethod === 'array');
-//     // console.log(tests[0].tests);
-//     assert(tests[0].tests[0].tests.some((test) => test(1)));
-//     assert(tests[1].tests[0].tests.some((test) => test('str')));
-//     assert(!tests[1].tests[0].tests.every((test) => test(1)));
-//     assert(!tests[0].tests[0].tests.every((test) => test(null)));
-// });
-
-// // =========================================
-// // --> OBJECTS
-// // --------------------------
-
-// test('Object Type: {any: number}', () => {
-//     const { testMethod, tests } = testBuilder('{any: number}');
-//     // console.log('__testLogHere__', tests.any);
-//     assert(testMethod === 'object');
-//     assert('any' in tests);
-//     assert(tests.any.tests[0](1) === true);
-//     assert(tests.any.tests[0]('str') === false);
-// });
-
-// test('Object Type: {x: number}', () => {
-//     const { testMethod, tests } = testBuilder('{x: number}');
-//     // console.log('__testLogHere__', tests);
-//     assert(testMethod === 'object');
-//     assert('x' in tests);
-//     assert(tests.x.tests[0](1) === true);
-//     assert(tests.x.tests[0]('str') === false);
-// });
-// // create test for {x: number?}
-// test('Object Type: {x: number?}', () => {
-//     const { testMethod, tests } = testBuilder('{x: number?}');
-//     // console.log('__testLogHere__', tests);
-//     assert(testMethod === 'object');
-//     assert('x' in tests);
-//     assert(tests.x.tests[0](1) === true);
-//     assert(tests.x.tests[0]('str') === false);
-//     assert(tests.x.tests[1](null) === true);
-// });
-
-// // create test for {x?: number?}
-// test('Object Type: {x?: number?}', () => {
-//     const { testMethod, tests } = testBuilder('{x?: number?}');
-//     // console.log('__testLogHere__', tests);
-//     assert(testMethod === 'object');
-//     assert('x' in tests);
-//     assert(tests.x.tests[0](1) === true);
-//     assert(tests.x.tests[0]('str') === false);
-//     assert(tests.x.tests[1](null) === true);
-// });
-
-// // create test for {x: number, y: string}
-// test('Object Type: {x: number, y: string}', () => {
-//     const { testMethod, tests } = testBuilder('{x: number, y: string}');
-//     // console.log('__testLogHere__', tests);
-//     assert(testMethod === 'object');
-//     assert('x' in tests);
-//     assert('y' in tests);
-//     assert(tests.x.tests[0](1) === true);
-//     assert(tests.x.tests[0]('str') === false);
-//     assert(tests.y.tests[0]('str') === true);
-//     assert(tests.y.tests[0](1) === false);
-// });
-
-// // create test for {x: number, y: string | number}
-// test('Object Type: {x: number, y: string | number}', () => {
-//     const { testMethod, tests } = testBuilder('{x: number, y: string | number}');
-//     // console.log('__testLogHere__', tests);
-//     assert(testMethod === 'object');
-//     assert('x' in tests);
-//     assert('y' in tests);
-//     assert(tests.x.tests[0](1) === true);
-//     assert(tests.x.tests[0]('str') === false);
-//     assert(tests.y.tests.some((test) => test('str')));
-//     assert(tests.y.tests.some((test) => test(1)));
-// });
-
-// // create test for {x: number, y: string | number, z: null}
-// test('Object Type: {x: number, y: string | number, z: null}', () => {
-//     const { testMethod, tests } = testBuilder('{x: number, y: string | number, z: null}');
-//     // console.log('__testLogHere__', tests);
-//     assert(testMethod === 'object');
-//     assert('x' in tests);
-//     assert('y' in tests);
-//     assert('z' in tests);
-//     assert(tests.x.tests[0](1) === true);
-//     assert(tests.x.tests[0]('str') === false);
-//     assert(tests.y.tests.some((test) => test('str')));
-//     assert(tests.y.tests.some((test) => test(1)));
-//     assert(tests.z.tests.some((test) => test(null)));
-// });
-
-// test('Nested Object in object: {{x: number}, {y: number}}', () => {
-//     const { testMethod, tests } = testBuilder('{{x: number}, {y: number}}');
-//     assert(testMethod === 'object');
-//     // console.table(tests);
-//     assert(tests[1].testMethod === 'object');
-//     assert('y' in tests[1].tests);
-//     assert(tests[1].tests.y.tests[0](1) === true);
-//     assert(tests[1].tests.y.tests[0]('str') === false);
-// });
-
-// // create test for {z: [number], x: string}
-// test('Object Type: {z: [number], x: string}', () => {
-//     const { testMethod, tests } = testBuilder('{z: [number], x: string}');
-//     // console.log('__testLogHere__', tests);
-//     assert(testMethod === 'object');
-//     assert('x' in tests);
-//     assert(tests.z.testMethod === 'array');
-//     assert(tests.x.tests[0]('str') === true);
-// });
-
-// // create test for [{x: number}]
-// test('Array with objects Type: [{x: number}]', () => {
-//     const { testMethod, tests } = testBuilder('[{x: number}]');
-//     // console.log('__testLogHere__', tests);
-//     assert(testMethod === 'array');
-//     assert(tests[0].testMethod === 'object');
-//     assert('x' in tests[0].tests);
-//     assert(tests[0].tests.x.tests[0](1) === true);
-//     assert(tests[0].tests.x.tests[0]('str') === false);
-// });
-// // create a test for [{x: number}, {y: number}]
-// test('Array Type: [{x: number}, {y: number}]', () => {
-//     const { testMethod, tests } = testBuilder('[{x: number}, {y: number}]');
-//     // console.log('__testLogHere__', tests);
-//     assert(testMethod === 'array');
-//     assert(tests[0].testMethod === 'object');
-//     assert('x' in tests[0].tests);
-//     assert(tests[0].tests.x.tests[0](1) === true);
-//     assert(tests[0].tests.x.tests[0]('str') === false);
-//     assert(tests[1].testMethod === 'object');
-//     assert('y' in tests[1].tests);
-//     assert(tests[1].tests.y.tests[0](1) === true);
-//     assert(tests[1].tests.y.tests[0]('str') === false);
-// });
-
-// test('Object Type: {key1: number | string, ...}', () => {
-//     const { testMethod, tests } = testBuilder('{key1: number | string, ...}');
-//     // console.log('__testLogHere__', tests);
-//     assert(testMethod === 'object');
-
-//     assert('key1' in tests);
-//     assert(tests.key1.tests[0](1) === true);
-//     assert(tests.key1.tests[1]('str') === true);
-// });
+// create tests for {key1: type, key2: type}
+test('objects: {key: type, key: type}', () => {
+    assert.equal(typeCheck('{x: string|number, y: number}', { x: 2, y: 10 }), true);
+    assert.equal(typeCheck('{x: string, y: number|null}', { x: 'string', y: 'str' }), false);
+    assert.equal(typeCheck('{x: string, y: number, z?: number}', { x: 'string', y: 10, z: 20 }), true);
+    assert.equal(typeCheck('{x: string, y: number}', { x: 'string', y: 10, z: 'str' }), false);
+});
