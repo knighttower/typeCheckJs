@@ -134,64 +134,114 @@ function runRouteTest(inputVal, unitTest) {
 }
 
 /**
- * TypeChecker
- * @private
- * @param {string} typeExp
- * @param {any} inputVal
- * @param {function} callback
- * @return {object} TypeChecker
+ * Get settings either from an object or a string keyword.
+ * @param {Object | string} input - The settings object or keyword for predefined settings.
+ * @return {object | null} - The settings object.
  */
-class TypeChecker {
-    constructor(typeExp, inputVal, callback) {
-        this.typeExp = typeExp;
-        this.inputVal = inputVal;
-        this.callback = callback || null;
-        this.unitTest = null;
-        this.testResult = null;
-    }
+function getSettings(input) {
+    if (input) {
+        // Check if input is an object
+        const type = typeof input;
 
-    runTest() {
-        this.unitTest = testBuilder(this.typeExp);
-        this.testResult = runRouteTest(this.inputVal, this.unitTest);
-        let result = new Boolean(this.testResult);
-
-        result.log = this.log.bind(this); // Attach the log method
-        result.fail = this.fail.bind(this); // Attach the fail method
-        if (this.callback) {
-            this.callback(this);
-        }
-        return result;
-    }
-
-    log() {
-        console.table(this);
-    }
-
-    fail() {
-        if (this.testResult === false) {
-            this.log();
-            const errorLog = typeErrorLogs[typeErrorLogs.length - 1];
-            throw new Error(`Type Error: "${errorLog.value}" is not valid, see log console for details`);
+        switch (type) {
+            case 'function':
+                return { callback: input };
+            case 'object':
+                return input;
+            case 'string':
+                switch (input) {
+                    case 'log':
+                        return { log: true };
+                    case 'fail':
+                        return { fail: true };
+                }
+            default:
+                return null;
         }
     }
+
+    return {
+        log: false,
+        fail: false,
+        callback: null,
+    };
 }
 
 /**
 * TypeCheck
 * @param {string} typeExp
 * @param {any} inputVal
-* @param {function} callback 
+* @param {object | string} params Parameters for the typeCheck function. 
 * @return {object} TypeChecker
 * @example typeCheck('number', 1) // true
 * @example typeCheck('[number]', [1]) // true
 * @example typeCheck('{any: number}', {x: 1, y: 2}) // true
 * @example typeCheck('{y: number, x: string}', { x: 'string', y: 10 }, ($this) => {
         console.log('__testLogHere__', $this);
-    }).log()
+    }) // using call back function
 * @see testUnit for more examples and test cases   
 */
-const typeCheck = (typeExp, inputVal, callback) => {
-    return new TypeChecker(typeExp, inputVal, callback).runTest();
+const typeCheck = (typeExp, inputVal, params) => {
+    const unitTest = testBuilder(typeExp);
+    const testResult = runRouteTest(inputVal, unitTest);
+    const settings = getSettings(params);
+    const callback = settings.callback ?? null;
+    const testData = {
+        typeExp: typeExp,
+        inputVal: inputVal,
+        callback: callback,
+        unitTest: unitTest,
+        testResult: testResult,
+    };
+
+    if (settings.log) {
+        console.table(testData);
+    }
+
+    if (settings.fail && !testResult) {
+        return typeError();
+    }
+
+    if (callback) {
+        callback(testData);
+    }
+
+    return testResult;
 };
 
-export { typeCheck, typeCheck as default };
+function typeError() {
+    const errorLog = typeErrorLogs[typeErrorLogs.length - 1];
+    throw new Error(`Type Error: "${errorLog.value}" is not valid, see log console for details`);
+}
+
+const _tc = (typeExp, __function, params) => {
+    return (...args) => {
+        const ckeck = typeCheck(typeExp, args, params);
+        return __function(...args);
+    };
+};
+
+const _tcx = (typeExp, __function) => {
+    // const ckeck = typeCheck(typeExp, args, params);
+    return (...args) => {
+        return new (class {
+            constructor() {
+                this.args = args;
+                this.testResults = typeCheck(typeExp, args);
+                return this.default();
+            }
+            default() {
+                return __function(...args);
+            }
+            log() {
+                console.log(this.args);
+                // return this.hello;
+            }
+            fail() {
+                console.log(this.args);
+                // return this.hello;
+            }
+        })();
+    };
+};
+export { typeCheck, _tc, _tcx, typeCheck as default };

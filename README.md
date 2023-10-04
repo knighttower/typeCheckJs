@@ -42,6 +42,7 @@ Include the following script tag in your HTML:
 6. **Functionality**: Supports callbacks, log and fail functions.
 7. **Flexibility**: Supports piped comparisons, optional arguments and keys.
 8. **Extensibility**: Supports custom type definitions. (Coming soon)
+9. **Tested**: All code used has been fully tested with Vitest Unit tests
 
 ## What aims to solve?
 

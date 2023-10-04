@@ -4,12 +4,12 @@ import { types } from '../src/types';
 import assert from 'assert';
 
 function testTypes() {
-    for (const type of Object.values(types)) {
-        test(`type ${type.type} should validate correctly`, (t) => {
-            const validInput = getValidInput(type.type);
-            const invalidInput = getInvalidInput(type.type);
-            assert(type.validate(validInput));
-            assert(!type.validate(invalidInput));
+    for (const [typeName, typeValidator] of Object.entries(types)) {
+        test(`type ${typeName} should validate correctly`, (t) => {
+            const validInput = getValidInput(typeName);
+            const invalidInput = getInvalidInput(typeName);
+            assert(typeValidator(validInput));
+            assert(!typeValidator(invalidInput));
         });
     }
 }

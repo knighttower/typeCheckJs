@@ -83,6 +83,7 @@ const basicTypes = (typeStr) => {
 const arrayTypes = (strExp) => {
     let testUnit = [];
     const convertedObj = getArrObjFromString(strExp);
+
     convertedObj.forEach((test) => {
         testUnit.push(testBuilder(test));
     });
