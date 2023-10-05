@@ -1,6 +1,6 @@
 // @vitest-environment jsdom
 import { test } from 'vitest';
-import { typeCheck, _tc, _tcx, validType } from '../src/TypeCheck';
+import { typeCheck, _tc, _tcx, validType, addTypeTest } from '../src/TypeCheck';
 import assert from 'assert';
 
 const benchmark = (name, fn, iterations) => {
@@ -15,8 +15,8 @@ const benchmark = (name, fn, iterations) => {
     console.log(`${name}: ${(end - start).toFixed(3)}ms`);
 };
 
-const recordsTotest = 1000;
-// Benchmark the _tc function with 10 records
+const recordsTotest = 100;
+// Benchmark the _tc function with 100 records
 benchmark(
     '_tc',
     () => {
@@ -55,6 +55,13 @@ benchmark(
     },
     recordsTotest,
 );
+
+addTypeTest('customTypeTest', function (x) {
+    return typeof x === 'number';
+});
+if (typeCheck('[customTypeTest]', [1]).test()) {
+    console.log(999);
+}
 
 typeCheck('[number, {y: string, x: string}, number]', [1, { x: 'string', y: 10, z: 20 }, 3]).test();
 if (typeCheck('[string]', [1]).test()) {

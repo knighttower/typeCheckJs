@@ -1,10 +1,10 @@
 // @vitest-environment jsdom
 import { test } from 'vitest';
-import { types } from '../src/types';
+import { typesMap } from '../src/types';
 import assert from 'assert';
 
 function testTypes() {
-    for (const [typeName, typeValidator] of Object.entries(types)) {
+    for (const [typeName, typeValidator] of typesMap.entries()) {
         test(`type ${typeName} should validate correctly`, (t) => {
             const validInput = getValidInput(typeName);
             const invalidInput = getInvalidInput(typeName);

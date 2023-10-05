@@ -22,32 +22,40 @@ Include the following script tag in your HTML:
 
 ```html
 <script src="https://cdn.jsdelivr.net/npm/@knighttower/type-check-js@latest/dist/typeCheck.min.js"></script>
+// or as ESM
+<script type="module">
+    import { typeCheck } from 'https://esm.run/@knighttower/type-check-js@latest/index.js';
+</script>
 ```
 
-| File             | Size     |
-| ---------------- | -------- |
-| /typeCheck.js    | 19.1 KiB |
-| /typeCheck.js.br | 5.42 KiB |
-| /typeCheck.js.gz | 5.89 KiB |
+| File             | Size   |
+| ---------------- | ------ |
+| /typeCheck.js    | 21 KiB |
+| /typeCheck.js.br | 6 KiB  |
+| /typeCheck.js.gz | 6 KiB  |
 
 <br/>
 
 ## Why TypeCheck JS?
 
 1. **Lightweight**: Adds minimal overhead to your project (only 6k GZip).
-2. **Fast Performance**: Optimized for quick type-checking operations.
+2. **Fast Performance**: Micro Optimized for quick type-checking operations.
 3. **Ease of Use**: Simple API and intuitive pattern syntax.
-4. **No Compile Step**: Works directly in vanilla JavaScript projects without the need for a compilation step.
-5. **Complementary**: Can be used alongside TypeScript to check front-end and back-end data types.
-6. **Functionality**: Supports callbacks, log and fail functions.
-7. **Flexibility**: Supports piped comparisons, optional arguments and keys.
-8. **Extensibility**: Supports custom type definitions. (Coming soon)
-9. **Tested**: All code used has been fully tested with Vitest Unit tests
+4. **Quick implementation**: Can be implemented in any existing projects with minimal effort.
+5. **No Compile Step**: Works directly in vanilla JavaScript projects without the need for a compilation step.
+6. **Complementary**: Can be used alongside TypeScript to check front-end and back-end data types.
+7. **Functionality**: Supports callbacks, log and fail functions.
+8. **Flexibility**: Supports piped comparisons, optional arguments and keys.
+9. **Extensibility**: Supports custom type definitions.
+10. **Tested**: All code used has been fully tested with Vitest Unit tests
+11. **Well Commented**: JSDocs comments for all methods and functions.
 
 ## What aims to solve?
 
 TypeCheck JS aims to solve the following problems:
 
+-   Drop-in solution for existing projects. Most projects are already in production and it is not always possible to add a build step to compile TypeScript.
+-   Overkill. Typescript can be too much for just small projects or quick projects.
 -   All TypeScript type definitions are lost at runtime. Once a library is in production, it is impossible to check the types of the data being passed around.
 -   Does not require Build Step. Most TypeScript solution requires a build step to compile the code into JavaScript. This is not always possible in some projects or it adds complexity to the project.
 -   Most library authors know what types should work with their code, but is hard to enforce once it goes to distribution. TypeCheck JS allows library authors to enforce the types when others use their libraries at runtime.
@@ -62,27 +70,153 @@ TypeCheck JS aims to solve the following problems:
 
 ## Usage
 
+### Basic:
+
+### -- typeCheck(testExpression, valueToTest, options);
+
 ```javascript
 /**
- * TypeCheck
  * @param {string} testExpression (see below for patterns)
  * @param {any} valueToTest
  * @param {function} callback optional
- * @return {object} TypeChecker Boolean Object
+ * @return {object} TypeCheck Object with chainable methods
  * @see testUnit for more examples and test cases
  */
-typeCheck(testExpression, valueToTest, callback);
+typeCheck(testExpression, valueToTest, options);
+
+// Methods:
+typeCheck(..).test(); // returns true or false, helpful for if statements or other logic
+typeCheck(..).bool; // same as 'test()', returns true or false, but more direct in the intent
+typeCheck(..).log(); // logs the results, helpful for debugging
+typeCheck(..).fail(); // throws exception if the test fails. Strict validation enforcement
+typeCheck(..).return(); // returns the valueToTest (non chainable with 'test' method)
+
+//Chain methods
+typeCheck(..).log().test(); // logs the results and returns true or false
+typeCheck(..).fail().test(); // throws exception if the test fails and returns true or false
+typeCheck(..).log().fail().return(); // returns the valueToTest and logs the results and throws exception if the test fails
+
+
+// Options
+{
+    log: true, // default false. Same as method log()
+    fail: true, // default false. Same as method fail()
+    callback: function, // default null. Only available in 'options'
+}
 ```
 
-## Usage Examples
+<br/>
+
+### Utility functions and advance usage:
+
+### -- validType(testExpression, valueToTest);
+
+-   Does not take any options
+-   Strict validation, throws exception if the test fails;
+-   Less options, but faster to implement
+
+```javascript
+function yourExistingFunction(valueToTest) {
+    validType('string', valueToTest);
+    // your code here
+}
+```
+
+<br/>
+
+### -- \_tc(testExpression, \_\_function, options);
+
+-   Wrapper for "typeCheck" (\_tc) to implement functions with type checking.
+-   Does not validate the "return value" of the function. (use "\_tcx" instead).
+-   lightweight, fast and easy to implement.
+-   Does take options.
+-   Does return the 'return value' of the function for each instance.
+-   Note: all test expressions are passed as 'array' like because args are 1 or more.
+
+```javascript
+const yourCoolFunction = _tc('[number, number]', function (myVar, theOtherVar) {
+    // .. your code here
+});
+
+yourCoolFunction(44.5, 'hello'); // validates that both are numbers
+
+// Options
+{
+    log: false, // default false. Same as method log()
+    fail: false, // default false. Same as method fail()
+}
+```
+
+<br/>
+
+### -- \_tcx(testExpression, \_\_function, options);
+
+-   Wrapper for "typeCheck" with 'return X' (\_tcx) to implement functions with type checking
+-   Validates the "return value" of the function.
+-   Offers more options.
+-   Has built in features for all its instances.
+-   Does take options.
+-   slighty slower than "\_tc", but more robust for full type checking.
+-   Does not return the 'return value' as '\_tc', instead it has to be explicitly called with '.return()'.
+-   Note: all test expressions are passed as 'array' like because args are 1 or more.
+
+```javascript
+const yourCoolFunction = _tcx('[number, string]', function (myVar, theOtherVar) {
+    // .. your code here
+    return 'hello';
+}, {validOutput: 'string'});
+
+yourCoolFunction(44.5, 'hello'); // validates that arg1 is 'number' and arg2 is 'string' and that the return value is a string
+
+// Options
+{
+    validOutput: 'testExpression', // default null. Same as method log()
+    log: false, // default false. Same as method log()
+    fail: false, // default false. Same as method fail()
+}
+
+// Built in features
+yourCoolFunction(...).log(); // logs the results, helpful for debugging individual functions
+yourCoolFunction(...).fail(); // throws exception if the test fails. Strict validation enforcement
+yourCoolFunction(...).return(); // returns the 'return value' (non chainable with 'test' method)
+yourCoolFunction(...).test(); // returns true or false, helpful for if statements or other logic
+yourCoolFunction(...).fail().return(); // if the test fails, it will throw exception and if passes returns the 'return value'
+```
+
+<br />
+
+### -- addTypeTest(name, testUnitFunction);
+
+-   Add custom type test to the library.
+-   Can be used with 'typeCheck' or '\_tc' and '\_tcx' functions.
+
+```javascript
+/**
+ * Add a new type test
+ * @param {string} name The name of the test to add
+ * @param {function} testUnit The test function
+ * @return {boolean} true if the test was added
+ * @throws {Error} if the test already exists
+ */
+addTypeTest('customTypeTest', function (x) {
+    return typeof x === 'number';
+});
+if (typeCheck('[customTypeTest]', [1]).test()) {
+    console.log(999); // logs 999 when validates to true
+}
+```
+
+<br /><br />
+
+## Examples
 
 You can perform type checks like this:
 
 ```javascript
 // Basic
-typeCheck('number', 1); // true
-typeCheck('number', '1'); // false
-typeCheck('string', 'str'); // true
+typeCheck('number', 1).test(); // true and returns a boolean
+typeCheck('number', '1').fail().test(); // false and throw exception
+typeCheck('string', 'str').log().test(); // true and logs the test results
 // With optional arguments
 typeCheck('string?', null); // true
 typeCheck('string?', undefined); // true
@@ -170,4 +304,10 @@ Possible type patterns:
 
 ```
 
-For more examples and usage patterns, further information and advanced use-cases, please refer to the `patterns` [here](/type-patterns.txt/) and `test` [here](/test/TypeCheck.test.js) files.
+<br />
+
+### ---> For more examples and usage patterns, further information and advanced use-cases, please refer to the `patterns` [here](/type-patterns.txt/) and `test` [here](/test/TypeCheck.test.js) files.
+
+---
+
+Check out other cool stuff at https://knighttower.io and help support open source projects.

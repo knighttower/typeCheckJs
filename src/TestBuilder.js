@@ -1,4 +1,5 @@
-import { types } from './types';
+// Imports type definitions
+import { typesMap } from './types';
 import { startAndEndWith, _removeBrackets, getArrObjFromString, typeOf } from '@knighttower/js-utility-functions';
 
 ('use strict');
@@ -32,12 +33,12 @@ function getPipedTypes(str) {
             itCanBeNull = true;
         }
         // lookup the test for the type and add it to the testsForKey array
-        const typeObj = types[type];
+        const typeObj = typesMap.get(type);
         const test = typeObj ?? isNoType(type);
         if (test) testsForKey.push(test);
         // for optional types, add the tests for null and undefined
         if (itCanBeNull) {
-            testsForKey.push(types['null'], types['undefined']);
+            testsForKey.push(typesMap.get('null'), typesMap.get('undefined'));
         }
         cachedPipedTypes.set(str, testsForKey);
         return testsForKey;
@@ -199,4 +200,20 @@ function testBuilder(strExp) {
     return testUnit;
 }
 
-export { testBuilder, testBuilder as default };
+/**
+ * Add a new type test
+ * @param {string} name The name of the test to add
+ * @param {function} testUnit The test function
+ * @return {boolean} true if the test was added
+ * @throws {Error} if the test already exists
+ */
+const addTypeTest = (name, testUnit) => {
+    if (!typesMap.has(name)) {
+        typesMap.set(name, testUnit);
+        return true;
+    }
+
+    throw new Error(`Type Error: "${name}" already exists`);
+};
+
+export { testBuilder, addTypeTest, testBuilder as default };

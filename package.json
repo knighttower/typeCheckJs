@@ -1,7 +1,7 @@
 {
-    "name": "js-typecheck",
+    "name": "type-check-js",
     "version": "1.0.0",
-    "description": "JS TypeCheck",
+    "description": "TypeCheck JS",
     "main": "index.js",
     "module": "index.js",
     "unpkg": "dist/typeCheck.js",
@@ -22,7 +22,8 @@
         "functions",
         "helper",
         "knighttower",
-        "typeCheck"
+        "typeCheck",
+        "type checking"
     ],
     "scripts": {
         "production": "npm run build",
@@ -33,7 +34,7 @@
     },
     "repository": {
         "type": "git",
-        "url": "git://github.com/knighttower/JsTypeCheck.git"
+        "url": "git://github.com/knighttower/typeCheckJs.git"
     },
     "dependencies": {
         "@knighttower/js-utility-functions": "^2.1.4"
