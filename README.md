@@ -3,7 +3,8 @@
 ## A simple type checker for JavaScript
 
 TypeCheck JS is a JavaScript library designed for fast and efficient type checking. Inspired by [gkz/type-check](https://github.com/gkz/type-check), this library aims to overcome the limitations and complexities associated with TypeScript. It offers a lightweight, memory-efficient, and easy-to-use solution for both basic and complex type-checking requirements.  
-[![NPM published](https://github.com/knighttower/typeCheckJs/actions/workflows/to-npm.yml/badge.svg?branch=development)](https://github.com/knighttower/typeCheckJs/actions/workflows/to-npm.yml)
+[![release version](https://github.com/knighttower/typeCheckJs/actions/workflows/pre-release.yml/badge.svg)](https://github.com/knighttower/typeCheckJs/actions/workflows/pre-release.yml) 
+[![NPM published](https://github.com/knighttower/typeCheckJs/actions/workflows/to-npm.yml/badge.svg)](https://github.com/knighttower/typeCheckJs/actions/workflows/to-npm.yml)
 
 ### Installation
 
@@ -310,5 +311,15 @@ Possible type patterns:
 ### ---> For more examples and usage patterns, further information and advanced use-cases, please refer to the `patterns` [here](/type-patterns.txt/) and `test` [here](/test/TypeCheck.test.js) files.
 
 ---
+<br /><br />  
 
-Check out other cool stuff at https://knighttower.io and help support open source projects.
+Check out other cool stuff at https://knighttower.io and help support open source projects.  
+
+<br />  
+
+---  
+Sponsored By:  
+
+[![image](https://github.com/knighttower/typeCheckJs/assets/649334/024f2e7d-d3d0-4558-8893-2e6bbea29a6f)](https://squarefox.us/)
+
+
