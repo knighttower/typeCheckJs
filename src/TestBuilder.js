@@ -2,6 +2,14 @@ import { types } from './types';
 import { startAndEndWith, _removeBrackets, getArrObjFromString, typeOf } from '@knighttower/js-utility-functions';
 
 ('use strict');
+
+// =========================================
+// --> STORAGE
+// --------------------------
+// Cache storage for tests
+const cachedTests = new Map();
+const cachedPipedTypes = new Map();
+
 // =========================================
 // --> Utility functions
 // --------------------------
@@ -12,6 +20,9 @@ import { startAndEndWith, _removeBrackets, getArrObjFromString, typeOf } from '@
  * @return {array} tests
  */
 function getPipedTypes(str) {
+    if (cachedPipedTypes.has(str)) {
+        return cachedPipedTypes.get(str);
+    }
     return str.split('|').reduce((testsForKey, t) => {
         let itCanBeNull = false;
         let type = t.trim();
@@ -28,7 +39,7 @@ function getPipedTypes(str) {
         if (itCanBeNull) {
             testsForKey.push(types['null'], types['undefined']);
         }
-
+        cachedPipedTypes.set(str, testsForKey);
         return testsForKey;
     }, []);
 }
@@ -108,9 +119,7 @@ const objectTypes = (strExp) => {
 
             return this.handleObject();
         }
-        splitKeyAndType(str) {
-            return str.split(':').map((t) => t.trim());
-        }
+
         checkOptionalKey(key) {
             if (key.endsWith('?')) {
                 key = key.slice(0, -1);
@@ -163,23 +172,30 @@ const objectTypes = (strExp) => {
  * @usage See more cases in the 'type-pattern.txt' file
  */
 function testBuilder(strExp) {
+    if (cachedTests.has(strExp)) {
+        return cachedTests.get(strExp);
+    }
     let testUnit = new Map([
         ['testMethod', determineMethod(strExp)],
         ['tests', null],
     ]);
 
-    if (testUnit.get('testMethod') === 'basic') {
-        testUnit.set('tests', basicTypes(strExp));
-    } else if (testUnit.get('testMethod') === 'array') {
-        testUnit.set('tests', arrayTypes(strExp));
-    } else if (testUnit.get('testMethod') === 'object') {
-        let objTypes = objectTypes(strExp);
-
-        testUnit = new Map([...testUnit, ...objTypes]);
-    } else {
-        isNoType(strExp);
+    switch (testUnit.get('testMethod')) {
+        case 'basic':
+            testUnit.set('tests', basicTypes(strExp));
+            break;
+        case 'array':
+            testUnit.set('tests', arrayTypes(strExp));
+            break;
+        case 'object':
+            let objTypes = objectTypes(strExp);
+            testUnit = new Map([...testUnit, ...objTypes]);
+            break;
+        default:
+            isNoType(strExp);
     }
 
+    cachedTests.set(strExp, testUnit);
     return testUnit;
 }
 
