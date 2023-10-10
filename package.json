@@ -1,6 +1,6 @@
 {
     "name": "@knighttower/type-check-js",
-    "version": "1.0.3",
+    "version": "1.0.4",
     "description": "TypeCheck JS",
     "main": "index.js",
     "module": "index.js",
