@@ -37,7 +37,7 @@
         "url": "git://github.com/knighttower/typeCheckJs.git"
     },
     "dependencies": {
-        "@knighttower/js-utility-functions": "^2.1.4"
+        "@knighttower/js-utility-functions": "^2.2.4"
     },
     "devDependencies": {
         "jsdom": "^22.1.0",
