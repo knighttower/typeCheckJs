@@ -22,7 +22,7 @@ yarn.lock
 .env
 .env.local
 .env.development
-**/build
+**/build/
 coverage
 **/.nuxt
 **/.jarvis

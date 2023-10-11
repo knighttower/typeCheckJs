@@ -1,5 +1,5 @@
-import { typeOf, isEmpty } from '@knighttower/js-utility-functions';
-import { testBuilder, addTypeTest } from './TestBuilder';
+import { typeOf, isEmpty } from '@knighttower/js-utility-functions/index.mjs';
+import testBuilder from './TestBuilder.mjs';
 
 // Error collectot
 const typeErrorLogs = [];
@@ -379,4 +379,4 @@ const validType = (typeExp, inputVal) => {
     return typeCheck(typeExp, inputVal).fail().test();
 };
 
-export { typeCheck, _tc, _tcx, validType, addTypeTest, typeCheck as default };
+export { _tc, _tcx, validType, typeCheck as default, typeCheck };

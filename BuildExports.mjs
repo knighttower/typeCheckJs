@@ -1,6 +1,7 @@
-const fs = require('fs');
-const path = require('path');
-const glob = require('glob');
+import fs from 'fs';
+import path from 'path';
+import glob from 'glob';
+import { PowerHelper as helper } from '@knighttower/js-utility-functions/index.mjs';
 
 /**
  * Reads a file and returns the names of the exported modules.
@@ -11,7 +12,7 @@ function getExports(filePath) {
     const content = fs.readFileSync(filePath, 'utf-8');
     const directExports =
         content.match(/export\s+(const|let|var|function|class)\s+(\w+)|export\s+(\w+)|export\s*{([^}]+)}/g) || [];
-    const defaultExport = content.match(/export\s+default\s+(class|function)?\s*(\w+)|(\w+)\s+as\s+default/);
+    const defaultExport = content.match(/export\s+default\s+(class|function)?\s*(\w+)|(\w+)\s+as\s+default/) || [];
     const aliases = content.match(/export\s*{([^}]+)}/g) || [];
 
     let namedExports = [];
@@ -37,17 +38,31 @@ function getExports(filePath) {
         defaultExportName = defaultExport[2] || defaultExport[3];
     }
 
+    // throw new Error('stop');
     // Adding aliases
     aliases.forEach((aliasLine) => {
         const parts = aliasLine.replace('export {', '').replace('}', '').split(',');
         parts.forEach((part) => {
-            const [original, alias] = part.trim().split(' as ');
-            if (alias && alias !== 'default') {
-                namedExports.push(alias);
+            part = part.trim();
+            if (part.includes(' as ')) {
+                const [original, alias] = helper.getChunks(part, ' as ');
+                if (alias && alias !== 'default') {
+                    alias = alias.trim();
+                    console.log('___ log ___', alias);
+                    if (!namedExports.includes(alias)) {
+                        namedExports.push(alias);
+                    }
+                }
+            } else {
+                console.log(part);
+                namedExports.push(part);
             }
         });
     });
 
+    console.log(aliases, namedExports);
+
+    // throw new Error('stop');
     // Remove 'default' from named exports
     namedExports = namedExports.filter((name) => name !== 'default' && name !== defaultExportName);
 
@@ -67,8 +82,8 @@ function generateIndexContent(allExports) {
     let exports = '';
 
     for (const [filePath, { named, default: defaultExport }] of Object.entries(allExports)) {
-        const moduleName = path.basename(filePath, '.js');
-        const relativePath = path.relative(process.cwd(), filePath).replace(/\\/g, '/').replace(/\.js$/, '');
+        const moduleName = path.basename(filePath).replace(/\.js|\.mjs/, '');
+        const relativePath = path.relative(process.cwd(), filePath).replace(/\\/g, '/');
 
         if (named.length > 0) {
             imports += `import * as _${moduleName} from './${relativePath}';\n`;
@@ -91,24 +106,25 @@ function generateIndexContent(allExports) {
 /**
  * Main function to generate the index.js file.
  */
-function generateIndex() {
-    const directory = process.argv.includes('--directory')
-        ? process.argv[process.argv.indexOf('--directory') + 1]
-        : '.';
-    const filePaths = glob.sync(`${directory}/**/*.js`);
+export function generateIndex() {
+    const directory = process.argv.includes('--dir') ? process.argv[process.argv.indexOf('--dir') + 1] : './src';
+    // Synchronously fetch all file paths within a directory and its subdirectories
+    // that have a .js or .mjs extension
+    const filePaths = glob.sync(`${directory}/**/*.{js,mjs}`);
 
+    console.log(directory);
     const allExports = {};
 
     filePaths.forEach((filePath) => {
-        if (path.basename(filePath) === 'index.js') {
+        if (path.basename(filePath) === 'index.mjs') {
             return;
         }
         allExports[filePath] = getExports(filePath);
     });
 
     const indexContent = generateIndexContent(allExports);
-    fs.writeFileSync(path.join(process.cwd(), 'index.js'), indexContent);
-    console.log('index.js generated');
+    fs.writeFileSync(path.join(process.cwd(), 'index.mjs'), indexContent);
+    console.log('index generated');
 }
 
-generateIndex();
+// generateIndex();

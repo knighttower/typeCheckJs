@@ -1,6 +1,6 @@
 // @vitest-environment jsdom
 import { test } from 'vitest';
-import { testBuilder } from '../src/TestBuilder';
+import testBuilder from '../src/TestBuilder.mjs';
 import assert from 'assert';
 
 // console.table(testBuilder('{any: number, z: {x: number}, {any: number}}'));
