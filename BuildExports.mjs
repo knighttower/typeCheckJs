@@ -2,47 +2,7 @@ import fs from 'fs';
 import path from 'path';
 import glob from 'glob';
 import { PowerHelper as helper, Utility as utils } from '@knighttower/js-utility-functions/index.mjs';
-
-/**
- * Get the value of a command line flag.
- *
- * @param {string} flagName - The name of the flag to look for.
- * @returns {string|bool} The value of the flag if found, or null if not found.
- */
-function getFlagValue(flagName) {
-    let argValue = null;
-    // allow only string values
-    if (typeof flagName !== 'string') {
-        return null;
-    }
-
-    const args = process.argv.slice(2); // Remove the first two elements (Node executable and script filename)
-    for (const prefix of ['--', '-']) {
-        const flag = `${prefix}${flagName}`;
-
-        args.every((arg, index) => {
-            if (arg.startsWith(flag)) {
-                if (arg.includes('=')) {
-                    argValue = arg.split('=')[1];
-                    return false;
-                } else {
-                    const nextVal = args[index + 1];
-                    if (nextVal && !nextVal.startsWith('-') && !nextVal.startsWith('--')) {
-                        argValue = nextVal;
-                        return false;
-                    } else {
-                        // return true since it can be just a flag
-                        argValue = true;
-                        return false;
-                    }
-                }
-            }
-            return true;
-        });
-    }
-    argValue = utils.isEmpty(argValue) ? null : helper.removeQuotes(argValue);
-    return argValue;
-}
+import { getFlagValue } from '@knighttower/js-utility-functions/node.mjs';
 
 /**
  * Reads a file and returns the names of the exported modules.
@@ -55,7 +15,7 @@ function getExports(filePath) {
     // Example matches: export const myVar, export function myFunc, export class MyClass
     // Example matches: export myVar, export myFunc
     const matchSingleExps = content.match(/export\s+(const|let|var|function|class)\s+(\w+)|export\s+(\w+)/g) || [];
-    // Example matches: export default class MyClass, export default function myFunc, export default myVar
+    // Example matches: export default class MyClass, export default function myFunc,
     const matchDefClasses = content.match(/export\s+default\s+(class|function)\s*(\b(?!(\{|\())\w+\b)/) || [];
     // Example matches: export default Name, Name as default
     const matchDefSingles =
@@ -68,7 +28,14 @@ function getExports(filePath) {
     // Storages
     const singleExports = [];
     const defaultExport = utils.emptyOrValue(
-        helper.cleanStr(matchDefClasses[0] || matchDefSingles[0] || '', 'export', 'default', /\bas\b/),
+        helper.cleanStr(
+            matchDefClasses[0] || matchDefSingles[0] || '',
+            'export',
+            'default',
+            'function',
+            'class',
+            /\bas\b/,
+        ),
     );
     const aliasExports = [];
     let namedExports = [];
@@ -154,20 +121,19 @@ function generateIndexContent(allExports) {
  */
 (function generateIndex() {
     const directory = getFlagValue('dir') ?? './src';
+    const destination = getFlagValue('out') ?? './index.mjs';
     // Synchronously fetch all file paths within a directory and its subdirectories
     // that have a .js or .mjs extension
     const filePaths = glob.sync(`${directory}/**/*.{js,mjs}`);
     const allExports = {};
 
     filePaths.forEach((filePath) => {
-        if (path.basename(filePath) !== 'index.mjs') {
+        if (!path.basename(filePath).includes('index')) {
             allExports[filePath] = getExports(filePath);
         }
     });
 
     const indexContent = generateIndexContent(allExports);
-    fs.writeFileSync(path.join(process.cwd(), 'index.mjs'), indexContent);
+    fs.writeFileSync(path.join(process.cwd(), destination), indexContent);
     console.log('index generated');
 })();
-
-// generateIndex();

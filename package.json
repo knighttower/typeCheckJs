@@ -1,7 +1,7 @@
 {
   "name": "@knighttower/type-check-js",
   "type": "module",
-  "version": "1.1.3",
+  "version": "1.1.15",
   "description": "TypeCheck JS",
   "main": "index.mjs",
   "module": "index.mjs",
@@ -41,7 +41,7 @@
     "url": "git://github.com/knighttower/typeCheckJs.git"
   },
   "dependencies": {
-    "@knighttower/js-utility-functions": "^3.0.10"
+    "@knighttower/js-utility-functions": "^3.0.15"
   },
   "devDependencies": {
     "compression-webpack-plugin": "^10.0.0",

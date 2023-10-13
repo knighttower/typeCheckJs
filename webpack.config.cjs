@@ -1,5 +1,6 @@
 const path = require('path');
 const CompressionPlugin = require('compression-webpack-plugin');
+
 /**
  * Generates a Webpack configuration for a given library name and target.
  *
@@ -21,12 +22,21 @@ const getWebpackConfig = (libraryName, libraryTarget, dir, ext) => ({
         libraryTarget: libraryTarget,
         umdNamedDefine: true,
     },
-    stats: 'errors-only',
+    stats: 'normal',
     plugins: [
         new CompressionPlugin({
             algorithm: 'brotliCompress',
             test: /\.js$/,
             compressionOptions: { level: 11 },
+            threshold: 10240,
+            minRatio: 0.8,
+            deleteOriginalAssets: false,
+        }),
+        new CompressionPlugin({
+            // <-- New instance for gzip compression
+            algorithm: 'gzip',
+            test: /\.js$/,
+            compressionOptions: { level: 9 },
             threshold: 10240,
             minRatio: 0.8,
             deleteOriginalAssets: false,

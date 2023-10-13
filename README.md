@@ -3,7 +3,7 @@
 ## A simple type checker for JavaScript
 
 TypeCheck JS is a JavaScript library designed for fast and efficient type checking. Inspired by [gkz/type-check](https://github.com/gkz/type-check), this library aims to overcome the limitations and complexities associated with TypeScript. It offers a lightweight, memory-efficient, and easy-to-use solution for both basic and complex type-checking requirements.  
-[![release version](https://github.com/knighttower/typeCheckJs/actions/workflows/pre-release.yml/badge.svg)](https://github.com/knighttower/typeCheckJs/actions/workflows/pre-release.yml) 
+[![release version](https://github.com/knighttower/typeCheckJs/actions/workflows/pre-release.yml/badge.svg)](https://github.com/knighttower/typeCheckJs/actions/workflows/pre-release.yml)
 [![NPM published](https://github.com/knighttower/typeCheckJs/actions/workflows/to-npm.yml/badge.svg)](https://github.com/knighttower/typeCheckJs/actions/workflows/to-npm.yml)
 
 ### Installation
@@ -21,6 +21,7 @@ yarn add @knighttower/type-check-js
 #### In the Browser
 
 Include the following script tag in your HTML:
+Note: by default the library is ESM, but other builds are available in the dist folder (cjs, umd and iife)
 
 ```html
 <script src="https://cdn.jsdelivr.net/npm/@knighttower/type-check-js@latest/dist/typeCheck.min.js"></script>
@@ -30,11 +31,11 @@ Include the following script tag in your HTML:
 </script>
 ```
 
-| File             | Size   |
-| ---------------- | ------ |
-| /typeCheck.js    | 21 KiB |
-| /typeCheck.js.br | 6 KiB  |
-| /typeCheck.js.gz | 6 KiB  |
+| File             | Size  |
+| ---------------- | ----- |
+| /typeCheck.js    | 8 KiB |
+| /typeCheck.js.br | 3 KiB |
+| /typeCheck.js.gz | 3 KiB |
 
 <br/>
 
@@ -311,15 +312,15 @@ Possible type patterns:
 ### ---> For more examples and usage patterns, further information and advanced use-cases, please refer to the `patterns` [here](/type-patterns.txt/) and `test` [here](/test/TypeCheck.test.js) files.
 
 ---
-<br /><br />  
 
-Check out other cool stuff at https://knighttower.io and help support open source projects.  
+<br /><br />
 
-<br />  
+Check out other cool stuff at https://knighttower.io and help support open source projects.
 
----  
-Sponsored By:  
+<br />
+
+---
+
+Sponsored By:
 
 [![image](https://github.com/knighttower/typeCheckJs/assets/649334/024f2e7d-d3d0-4558-8893-2e6bbea29a6f)](https://squarefox.us/)
-
-
