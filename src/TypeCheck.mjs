@@ -1,5 +1,5 @@
-import { typeOf, isEmpty } from '@knighttower/js-utility-functions';
-import { testBuilder, addTypeTest } from './TestBuilder';
+import { typeOf, isEmpty } from '@knighttower/js-utility-functions/index.mjs';
+import testBuilder from './TestBuilder.mjs';
 
 // Error collectot
 const typeErrorLogs = [];
@@ -54,6 +54,7 @@ class HandleObjects {
             case !isEmpty(this.testFew):
                 // '{key1: type, any: type}'; // specific key, and all other "any"
                 // test the testFew fist so that we can remove them from the inputObject
+                /* eslint-disable-next-line */
                 const testFewResults = this.testObjFew();
                 // remove the testFew from the inputObject
                 this.filterOutFew();
@@ -61,6 +62,7 @@ class HandleObjects {
             case !isEmpty(this.optionalKeys):
                 // '{key1?: type, key2?: type}'; // optional keys
                 // test the optionalKeys fist so that we can remove them from the inputObject
+                /* eslint-disable-next-line */
                 const optionalKeysResults = this.testObjOptionalKeys();
                 // remove the optionalKeys from the inputObject
                 this.filterOutOptionalKeys();
@@ -377,4 +379,4 @@ const validType = (typeExp, inputVal) => {
     return typeCheck(typeExp, inputVal).fail().test();
 };
 
-export { typeCheck, _tc, _tcx, validType, addTypeTest, typeCheck as default };
+export { _tc, _tcx, validType, typeCheck as default, typeCheck };

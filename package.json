@@ -1,48 +1,58 @@
 {
-    "name": "@knighttower/type-check-js",
-    "version": "1.0.4",
-    "description": "TypeCheck JS",
-    "main": "index.js",
-    "module": "index.js",
-    "unpkg": "dist/typeCheck.js",
-    "jsdelivr": "dist/typeCheck.js",
-    "browser": "dist/typeCheck.js",
-    "license": "MIT",
-    "keywords": [
-        "Utility",
-        "Vue",
-        "react",
-        "library",
-        "plugin",
-        "URL",
-        "Vue 2",
-        "Vue 3",
-        "javascript",
-        "DOM",
-        "functions",
-        "helper",
-        "knighttower",
-        "typeCheck",
-        "type checking"
-    ],
-    "scripts": {
-        "production": "npm run build",
-        "build": "mix --production",
-        "dev": "mix",
-        "watch": "mix watch",
-        "test": "vitest"
-    },
-    "repository": {
-        "type": "git",
-        "url": "git://github.com/knighttower/typeCheckJs.git"
-    },
-    "dependencies": {
-        "@knighttower/js-utility-functions": "^2.2.4"
-    },
-    "devDependencies": {
-        "jsdom": "^22.1.0",
-        "laravel-mix": "^6.0.49",
-        "laravel-mix-compress": "^3.0.0",
-        "vitest": "^0.34.6"
-    }
+  "name": "@knighttower/type-check-js",
+  "type": "module",
+  "version": "1.1.15",
+  "description": "TypeCheck JS",
+  "main": "index.mjs",
+  "module": "index.mjs",
+  "unpkg": "dist/browser/typeCheck.js",
+  "jsdelivr": "dist/browser/typeCheck.js",
+  "browser": "dist/browser/typeCheck.js",
+  "license": "MIT",
+  "keywords": [
+    "Utility",
+    "Vue",
+    "react",
+    "library",
+    "plugin",
+    "URL",
+    "Vue 2",
+    "Vue 3",
+    "javascript",
+    "DOM",
+    "functions",
+    "helper",
+    "knighttower",
+    "typeCheck",
+    "type checking"
+  ],
+  "scripts": {
+    "production": "npm run build",
+    "build": "webpack --mode production && node ./BuildExports.mjs --dir ./src && node ./BumpVersion.cjs",
+    "dev": "webpack --mode development",
+    "watch": "webpack --mode development --watch",
+    "test": "npm run format && npm run eslint && vitest",
+    "format": "prettier --config .prettierrc.json --write ./src",
+    "format-check": "prettier --config .prettierrc.json --check ./src",
+    "eslint": "eslint -c .eslintrc.json --fix ./src --ext .js,.cjs,.mjs"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git://github.com/knighttower/typeCheckJs.git"
+  },
+  "dependencies": {
+    "@knighttower/js-utility-functions": "^3.0.15"
+  },
+  "devDependencies": {
+    "compression-webpack-plugin": "^10.0.0",
+    "eslint": "^8.51.0",
+    "eslint-config-prettier": "^9.0.0",
+    "eslint-plugin-prettier": "^5.0.1",
+    "jsdom": "^22.1.0",
+    "prettier": "^3.0.3",
+    "pretty-quick": "^3.1.3",
+    "vitest": "^0.34.6",
+    "webpack": "^5.88.2",
+    "webpack-cli": "^5.1.4"
+  }
 }

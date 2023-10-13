@@ -1,6 +1,6 @@
-// Imports type definitions
-import { typesMap } from './types';
-import { startAndEndWith, _removeBrackets, getArrObjFromString, typeOf } from '@knighttower/js-utility-functions';
+//  type definitions
+import { typesMap } from './types.mjs';
+import { startAndEndWith, getArrObjFromString, typeOf } from '@knighttower/js-utility-functions/index.mjs';
 
 ('use strict');
 
@@ -35,7 +35,9 @@ function getPipedTypes(str) {
         // lookup the test for the type and add it to the testsForKey array
         const typeObj = typesMap.get(type);
         const test = typeObj ?? isNoType(type);
-        if (test) testsForKey.push(test);
+        if (test) {
+            testsForKey.push(test);
+        }
         // for optional types, add the tests for null and undefined
         if (itCanBeNull) {
             testsForKey.push(typesMap.get('null'), typesMap.get('undefined'));
@@ -93,7 +95,7 @@ const basicTypes = (typeStr) => {
  * @return {array} tests
  */
 const arrayTypes = (strExp) => {
-    let testUnit = [];
+    const testUnit = [];
     const convertedObj = getArrObjFromString(strExp);
 
     convertedObj.forEach((test) => {
@@ -128,6 +130,7 @@ const objectTypes = (strExp) => {
             }
             return key;
         }
+
         checkTheAnyKey(obj) {
             if ('any' in obj) {
                 const keys = Object.keys(obj);
@@ -141,6 +144,7 @@ const objectTypes = (strExp) => {
                 }
             }
         }
+
         handleObject() {
             const convertedObj = getArrObjFromString(strExp);
             this.checkTheAnyKey(convertedObj);
@@ -189,7 +193,8 @@ function testBuilder(strExp) {
             testUnit.set('tests', arrayTypes(strExp));
             break;
         case 'object':
-            let objTypes = objectTypes(strExp);
+            /* eslint-disable-next-line */
+            const objTypes = objectTypes(strExp);
             testUnit = new Map([...testUnit, ...objTypes]);
             break;
         default:
