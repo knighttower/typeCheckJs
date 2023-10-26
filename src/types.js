@@ -1,5 +1,5 @@
 // typeOf is used here insteand of the native typeof because it can handle better the identifications of arrays and objects
-import { typeOf } from '@knighttower/js-utility-functions/index.mjs';
+import { typeOf } from '@knighttower/js-utility-functions';
 
 export const typesMap = new Map([
     ['array', (_var_) => typeOf(_var_, 'array')],

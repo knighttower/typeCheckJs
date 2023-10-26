@@ -1,7 +1,7 @@
 // @vitest-environment jsdom
 import { test } from 'vitest';
-import { addTypeTest } from '../src/TestBuilder.mjs';
-import { typeCheck, _tc, _tcx, validType } from '../src/TypeCheck.mjs';
+import { addTypeTest } from '../src/TestBuilder.js';
+import { typeCheck, _tc, _tcx, validType } from '../src/TypeCheck.js';
 import assert from 'assert';
 
 const benchmark = (name, fn, iterations) => {
