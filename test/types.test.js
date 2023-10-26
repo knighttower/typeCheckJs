@@ -1,6 +1,6 @@
 // @vitest-environment jsdom
 import { test } from 'vitest';
-import { typesMap } from '../src/types.mjs';
+import { typesMap } from '../src/types.js';
 import assert from 'assert';
 
 function testTypes() {

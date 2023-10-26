@@ -24,18 +24,34 @@ Include the following script tag in your HTML:
 Note: by default the library is ESM, but other builds are available in the dist folder (cjs, umd and iife)
 
 ```html
-<script src="https://cdn.jsdelivr.net/npm/@knighttower/type-check-js@latest/dist/typeCheck.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@knighttower/type-check-js@latest/dist/browser/TypeCheck.min.js"></script>
 // or as ESM
 <script type="module">
     import { typeCheck } from 'https://esm.run/@knighttower/type-check-js@latest/index.js';
 </script>
 ```
 
+<br/>
+
+## Files
+
 | File             | Size  |
 | ---------------- | ----- |
-| /typeCheck.js    | 8 KiB |
-| /typeCheck.js.br | 3 KiB |
-| /typeCheck.js.gz | 3 KiB |
+| /TypeCheck.js    | 8 KiB |
+| /TypeCheck.js.br | 3 KiB |
+| /TypeCheck.js.gz | 3 KiB |
+
+By default the "import" or "require", will load the indexes automatically. But, in case of wanting to use individual files or other specific formats, all Files are available in the dist folder as ESM, CJS, AMD, IIFE, Browser, UMD and System formats. For ESM + JS 'next', use the files in the src folder or import directly from the index.js (index.cjs.js for commonJS) file.
+
+<br/>
+
+## Usage
+
+```javascript
+// note: in some cases, you may need to use the full path to the file "/index" in order to import it
+// All other modules can also be imported individually from the same path
+import { typeCheck } from '@knighttower/type-check-js';
+```
 
 <br/>
 

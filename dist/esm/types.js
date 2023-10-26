@@ -1,5 +1,3 @@
-'use strict';
-
 function _typeof(o) {
   "@babel/helpers - typeof";
 
@@ -209,4 +207,4 @@ var typesMap = new Map([['array', function (_var_) {
   return _var_ instanceof WeakSet;
 }]]);
 
-exports.typesMap = typesMap;
+export { typesMap };

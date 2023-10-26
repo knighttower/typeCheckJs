@@ -1,7 +1,3 @@
-'use strict';
-
-Object.defineProperty(exports, '__esModule', { value: true });
-
 function _iterableToArrayLimit(r, l) {
   var t = null == r ? null : "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"];
   if (null != t) {
@@ -1309,8 +1305,4 @@ var validType = function validType(typeExp, inputVal) {
   return typeCheck(typeExp, inputVal).fail().test();
 };
 
-exports._tc = _tc;
-exports._tcx = _tcx;
-exports.default = typeCheck;
-exports.typeCheck = typeCheck;
-exports.validType = validType;
+export { _tc, _tcx, typeCheck as default, typeCheck, validType };

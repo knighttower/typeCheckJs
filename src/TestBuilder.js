@@ -1,6 +1,6 @@
 //  type definitions
-import { typesMap } from './types.mjs';
-import { startAndEndWith, getArrObjFromString, typeOf } from '@knighttower/js-utility-functions/index.mjs';
+import { typesMap } from './types.js';
+import { startAndEndWith, getArrObjFromString, typeOf } from '@knighttower/js-utility-functions';
 
 ('use strict');
 
