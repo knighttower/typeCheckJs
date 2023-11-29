@@ -438,7 +438,6 @@ define(['exports'], (function (exports) { 'use strict';
     if (match) {
       return match[2].trim(); // Extract and trim the content between brackets
     }
-
     return strExp; // Return the original string if no brackets found at start and end
   }
 
@@ -1307,6 +1306,7 @@ define(['exports'], (function (exports) { 'use strict';
     return typeCheck(typeExp, inputVal).fail().test();
   };
 
+  exports.TypeCheck = typeCheck;
   exports._tc = _tc;
   exports._tcx = _tcx;
   exports.default = typeCheck;

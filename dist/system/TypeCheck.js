@@ -1,4 +1,4 @@
-System.register('adaptive', [], (function (exports) {
+System.register('TypeCheck', [], (function (exports) {
   'use strict';
   return {
     execute: (function () {
@@ -441,7 +441,6 @@ System.register('adaptive', [], (function (exports) {
         if (match) {
           return match[2].trim(); // Extract and trim the content between brackets
         }
-
         return strExp; // Return the original string if no brackets found at start and end
       }
 
@@ -1186,7 +1185,7 @@ System.register('adaptive', [], (function (exports) {
           }]);
           return _class;
         }())();
-      }; exports({ default: typeCheck, typeCheck: typeCheck });
+      }; exports({ default: typeCheck, typeCheck: typeCheck, TypeCheck: typeCheck });
 
       /**
       * _tc is a helper function to wrap a function with typeCheck

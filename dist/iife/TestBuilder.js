@@ -1,4 +1,4 @@
-var adaptive = (function (exports) {
+var TestBuilder = (function (exports) {
   'use strict';
 
   function _typeof(o) {
@@ -368,7 +368,6 @@ var adaptive = (function (exports) {
     if (match) {
       return match[2].trim(); // Extract and trim the content between brackets
     }
-
     return strExp; // Return the original string if no brackets found at start and end
   }
 

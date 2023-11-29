@@ -1,3 +1,7 @@
+'use strict';
+
+Object.defineProperty(exports, '__esModule', { value: true });
+
 function _iterableToArrayLimit(r, l) {
   var t = null == r ? null : "undefined" != typeof Symbol && r[Symbol.iterator] || r["@@iterator"];
   if (null != t) {
@@ -436,7 +440,6 @@ function _removeBrackets(strExp) {
   if (match) {
     return match[2].trim(); // Extract and trim the content between brackets
   }
-
   return strExp; // Return the original string if no brackets found at start and end
 }
 
@@ -1305,4 +1308,9 @@ var validType = function validType(typeExp, inputVal) {
   return typeCheck(typeExp, inputVal).fail().test();
 };
 
-export { _tc, _tcx, typeCheck as default, typeCheck, validType };
+exports.TypeCheck = typeCheck;
+exports._tc = _tc;
+exports._tcx = _tcx;
+exports.default = typeCheck;
+exports.typeCheck = typeCheck;
+exports.validType = validType;

@@ -1,3 +1,7 @@
+'use strict';
+
+Object.defineProperty(exports, '__esModule', { value: true });
+
 function _typeof(o) {
   "@babel/helpers - typeof";
 
@@ -365,7 +369,6 @@ function _removeBrackets(strExp) {
   if (match) {
     return match[2].trim(); // Extract and trim the content between brackets
   }
-
   return strExp; // Return the original string if no brackets found at start and end
 }
 
@@ -809,4 +812,6 @@ var addTypeTest = function addTypeTest(name, testUnit) {
   throw new Error("Type Error: \"".concat(name, "\" already exists"));
 };
 
-export { addTypeTest, testBuilder as default, testBuilder };
+exports.addTypeTest = addTypeTest;
+exports.default = testBuilder;
+exports.testBuilder = testBuilder;
