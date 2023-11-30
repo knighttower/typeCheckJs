@@ -1,6 +1,6 @@
 {
   "name": "@knighttower/type-check-js",
-  "version": "1.3.1",
+  "version": "1.3.2",
   "type": "module",
   "description": "TypeCheck JS",
   "main": "index.cjs",
@@ -18,7 +18,7 @@
   "exports": {
     ".": {
       "import": "./index.js",
-      "require": "./index.cjs.js"
+      "require": "./index.cjs"
     },
     "./dist/*": "./dist/*"
   },
