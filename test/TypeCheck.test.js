@@ -56,32 +56,31 @@ benchmark(
     },
     recordsTotest,
 );
-
 addTypeTest('customTypeTest', function (x) {
     return typeof x === 'number';
 });
-if (typeCheck('[customTypeTest]', [1]).test()) {
+if (typeCheck([1], '[customTypeTest]').test()) {
     console.log(999);
 }
 
-typeCheck('[number, {y: string, x: string}, number]', [1, { x: 'string', y: 10, z: 20 }, 3]).test();
-if (typeCheck('[string]', [1]).test()) {
+typeCheck([1, { x: 'string', y: 10, z: 20 }, 3], '[number, {y: string, x: string}, number]').test();
+if (typeCheck([1], '[string]').test()) {
     console.log(3);
 }
-if (typeCheck('[number]', [1]).test()) {
+if (typeCheck([1], '[number]').test()) {
     console.log(66);
 }
-console.log(typeCheck('[number]', [1], { log: true }).return());
-console.log(typeCheck('[number]', [1], 'log').test());
-console.log(typeCheck('[number]', [1]).log());
+console.log(typeCheck([1], '[number]', { log: true }).return());
+console.log(typeCheck([1], '[number]', 'log').test());
+console.log(typeCheck([1], '[number]').log());
 
-console.log(typeCheck('[number]', [1], 'fail'));
-console.log(typeCheck('[number]', [1], { fail: true }));
+console.log(typeCheck([1], '[number]', 'fail'));
+console.log(typeCheck([1], '[number]', { fail: true }));
 
-console.log(typeCheck('[number]', [1], { fail: true, log: true }));
-console.log(typeCheck('[number]', [1], { fail: true, log: true, return: true, callback: () => {} }));
+console.log(typeCheck([1], '[number]', { fail: true, log: true }));
+console.log(typeCheck([1], '[number]', { fail: true, log: true, return: true, callback: () => {} }));
 console.log(
-    typeCheck('[number]', [1], {
+    typeCheck([1], '[number]', {
         fail: true,
         log: true,
         callback: () => {
@@ -90,7 +89,7 @@ console.log(
     }),
 );
 
-console.log(typeCheck('[number]', [1]).return()); // returns [1], the inputValue
+console.log(typeCheck([1], '[number]').return()); // returns [1], the inputValue
 
 let myCoolFunction;
 myCoolFunction = _tc('[number, number]', function (myVar, hello) {
@@ -114,47 +113,47 @@ myCoolFunction(44.5, 'dude!'); //logs dude! and then triggers failure
 myCoolFunction(44.5, 'wow!'); //logs wow! and then triggers log
 myCoolFunction(44.5, 'nooo').log(); // logs hello and then does something else
 
-console.log(validType('[number]', [1]));
+console.log(validType([1], '[number]'));
 
 // Test for array types
 test('Array Type: [number]', () => {
-    assert.equal(typeCheck('[number]', [1]).test(), true);
-    assert.equal(typeCheck('[number]', ['str']).test(), false);
-    assert.equal(typeCheck('[number, string]', [1, 'str']).test(), true);
-    assert.equal(typeCheck('[number, number, string]', [1, 3, null]).test(), false);
+    assert.equal(typeCheck([1], '[number]').test(), true);
+    assert.equal(typeCheck(['str'], '[number]').test(), false);
+    assert.equal(typeCheck([1, 'str'], '[number, string]').test(), true);
+    assert.equal(typeCheck([1, 3, null], '[number, number, string]').test(), false);
     assert.equal(
-        typeCheck('[number, {any: string, x: string}, number]', [1, { x: 'string', y: 10, z: 20 }, 3]).test(),
+        typeCheck([1, { x: 'string', y: 10, z: 20 }, 3], '[number, {any: string, x: string}, number]').test(),
         false,
     );
-    assert.equal(typeCheck('[number, {any: string}, number]', [1, { x: 'string', y: 10, z: 20 }, 3]).test(), false);
+    assert.equal(typeCheck([1, { x: 'string', y: 10, z: 20 }, 3], '[number, {any: string}, number]').test(), false);
     assert.equal(
-        typeCheck('[number, {any: number, x: string}, number]', [1, { x: 'string', y: 10, z: 20 }, 3]).test(),
+        typeCheck([1, { x: 'string', y: 10, z: 20 }, 3], '[number, {any: number, x: string}, number]').test(),
         true,
     );
 });
 
 // test objects
-
-test('objects', () => {
-    assert.equal(typeCheck('{x: string, y: number, z?: number}', { x: 'string', y: 10 }).test(), true);
-    assert.equal(typeCheck('{x: string, y: number, z?: number}', { x: 'string', y: 10, z: 20 }).test(), true);
-    assert.equal(typeCheck('{x: string, y: number, z: number?}', { x: 'string', y: 10, z: 'str' }).test(), false);
-    assert.equal(typeCheck('{x: string, y: number, ...}', { x: 'string', y: 10, z: 20 }).test(), true);
+// Test for object types
+test('Object Type: {x: string, y: number, z?: number}', () => {
+    assert.equal(typeCheck({ x: 'string', y: 10 }, '{x: string, y: number, z?: number}').test(), true);
+    assert.equal(typeCheck({ x: 'string', y: 10, z: 20 }, '{x: string, y: number, z?: number}').test(), true);
+    assert.equal(typeCheck({ x: 'string', y: 10, z: 'str' }, '{x: string, y: number, z: number?}').test(), false);
+    assert.equal(typeCheck({ x: 'string', y: 10, z: 20 }, '{x: string, y: number, ...}').test(), true);
 });
 
 // create tests for {key1: type}
 test('objects: {key: type}', () => {
-    assert.equal(typeCheck('{x: string, y: number}', { x: 'string', y: 10 }).test(), true);
-    assert.equal(typeCheck('{x: string, y: number}', { x: 'string', y: 'str' }).test(), false);
-    assert.equal(typeCheck('{x: string, y: number}', { x: 'string', y: 10, z: 20 }).test(), false);
-    assert.equal(typeCheck('{x: string, y: number, ...}', { x: 'string', y: 10, z: 'str' }).test(), true);
-    assert.equal(typeCheck('{x: string, y: number, any: number}', { x: 'string', y: 10, z: 20 }).test(), true);
+    assert.equal(typeCheck({ x: 'string', y: 10 }, '{x: string, y: number}').test(), true);
+    assert.equal(typeCheck({ x: 'string', y: 'str' }, '{x: string, y: number}').test(), false);
+    assert.equal(typeCheck({ x: 'string', y: 10, z: 20 }, '{x: string, y: number}').test(), false);
+    assert.equal(typeCheck({ x: 'string', y: 10, z: 'str' }, '{x: string, y: number, ...}').test(), true);
+    assert.equal(typeCheck({ x: 'string', y: 10, z: 20 }, '{x: string, y: number, any: number}').test(), true);
 });
 
 // create tests for {key1: type, key2: type}
 test('objects: {key: type, key: type}', () => {
-    assert.equal(typeCheck('{x: string|number, y: number}', { x: 2, y: 10 }).test(), true);
-    assert.equal(typeCheck('{x: string, y: number|null}', { x: 'string', y: 'str' }).test(), false);
-    assert.equal(typeCheck('{x: string, y: number, z?: number}', { x: 'string', y: 10, z: 20 }).test(), true);
-    assert.equal(typeCheck('{x: string, y: number}', { x: 'string', y: 10, z: 'str' }).test(), false);
+    assert.equal(typeCheck({ x: 2, y: 10 }, '{x: string|number, y: number}').test(), true);
+    assert.equal(typeCheck({ x: 'string', y: 'str' }, '{x: string, y: number|null}').test(), false);
+    assert.equal(typeCheck({ x: 'string', y: 10, z: 20 }, '{x: string, y: number, z?: number}').test(), true);
+    assert.equal(typeCheck({ x: 'string', y: 10, z: 'str' }, '{x: string, y: number}').test(), false);
 });

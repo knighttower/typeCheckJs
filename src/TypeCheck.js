@@ -210,17 +210,17 @@ function typeError() {
 
 /**
 * TypeCheck
-* @param {string} typeExp
 * @param {any} inputVal
+* @param {string} typeExp
 * @param {object | string} params Parameters for the typeCheck function. 
 * @return {bool | any} TypeChecker By default it returns boolean, but if '.return()' is used it will return the inputVal
-* @example typeCheck('number', 1) // true
-* @example typeCheck('[number]', [1]) // true
-* @example typeCheck('{any: number}', {x: 1, y: 2}) // true
-* @example typeCheck('{y: number, x: string}', { x: 'string', y: 10 }, ($this) => {
+* @example typeCheck(1, 'number') // true
+* @example typeCheck([1], '[number]') // true
+* @example typeCheck({x: 1, y: 2}, '{any: number}') // true
+* @example typeCheck({ x: 'string', y: 10 }, '{y: number, x: string}', ($this) => {
         console.log('__testLogHere__', $this);
     }) // using call back function
-* @usage (stringTypeExpression, anyInputValue, params: object | string)
+* @usage (anyInputValue, stringTypeExpression, params: object | string)
 * @usage params: object = { log: boolean, fail: boolean, callback: function }
 * @usage params: string = 'log' | 'fail' | callback: function
 * @usage chain Methods: log(), fail(), return() // returns the input value, test() returns the boolean
@@ -231,7 +231,7 @@ function typeError() {
 * Params: callback = function ; // callback function
 * @see testUnit for more examples and test cases   
 */
-const typeCheck = (typeExp, inputVal, params) => {
+const typeCheck = (inputVal, typeExp, params) => {
     return new (class {
         constructor() {
             this.unitTest = testBuilder(typeExp);
@@ -300,7 +300,7 @@ const typeCheck = (typeExp, inputVal, params) => {
 */
 const _tc = (typeExp, __function, params) => {
     return (...args) => {
-        typeCheck(typeExp, args, params);
+        typeCheck(args, typeExp, params);
         return __function(...args);
     };
 };
@@ -337,7 +337,7 @@ const _tcx = (typeExp, __function, params) => {
         return new (class {
             constructor() {
                 this.args = args;
-                this.testResults = typeCheck(typeExp, args, $settings);
+                this.testResults = typeCheck(args, typeExp, $settings);
                 return this.default();
             }
             default() {
@@ -345,7 +345,7 @@ const _tcx = (typeExp, __function, params) => {
 
                 const validOutput = $settings.validOutput ?? false;
                 if (validOutput) {
-                    typeCheck(validOutput, this.returns, 'fail');
+                    typeCheck(this.returns, validOutput, 'fail');
                 }
                 return this;
             }
@@ -369,14 +369,14 @@ const _tcx = (typeExp, __function, params) => {
  * @param {string} typeExp Expression to test
  * @param {any} inputVal Value to test
  * @return {bool} isValidType
- * @example validType('[number]', 1) // true
- * @example validType('[number]', 'str') // false - throws exception
- * @usage (stringTypeExpression, anyInputValue)
+ * @example validType(1, '[number]') // true
+ * @example validType('str', '[number]') // false - throws exception
+ * @usage (anyInputValue, stringTypeExpression)
  * @usage returns boolean
  * @see directory test for more information and examples
  */
-const validType = (typeExp, inputVal) => {
-    return typeCheck(typeExp, inputVal).fail().test();
+const validType = (inputVal, typeExp) => {
+    return typeCheck(inputVal, typeExp).fail().test();
 };
 
 export { _tc, _tcx, validType, typeCheck as default, typeCheck, typeCheck as TypeCheck };

@@ -45,16 +45,6 @@ By default the "import" or "require", will load the indexes automatically. But, 
 
 <br/>
 
-## Usage
-
-```javascript
-// note: in some cases, you may need to use the full path to the file "/index" in order to import it
-// All other modules can also be imported individually from the same path
-import { typeCheck } from '@knighttower/type-check-js';
-```
-
-<br/>
-
 ## Why TypeCheck JS?
 
 1. **Lightweight**: Adds minimal overhead to your project (only 6k GZip).
@@ -87,21 +77,33 @@ TypeCheck JS aims to solve the following problems:
 -   Bad programming.
 -   Replacing TypeScript at build time.
 
-## Usage
+<br/>
+
+## 🚀 Usage
+
+```javascript
+// note: in some cases, you may need to use the full path to the file "/index" in order to import it
+// All other modules can also be imported individually from the same path
+import { typeCheck } from '@knighttower/type-check-js';
+```
+
+### 👉 IMPORTANT
+
+the API for the direct typeCheck function has changed to favor familiarity with Typed Methods where "Value:Type" order is used. That means that the old "typeCheck(Type, Value)" is now deprecated and from now on will be "typeCheck(Value, Type)".
 
 ### Basic:
 
-### -- typeCheck(testExpression, valueToTest, options);
+# -- typeCheck(valueToTest, testExpression, options);
 
 ```javascript
 /**
- * @param {string} testExpression (see below for patterns)
  * @param {any} valueToTest
+ * @param {string} testExpression (see below for patterns)
  * @param {function} callback optional
  * @return {object} TypeCheck Object with chainable methods
  * @see testUnit for more examples and test cases
  */
-typeCheck(testExpression, valueToTest, options);
+typeCheck(valueToTest, testExpression, options);
 
 // Methods:
 typeCheck(..).test(); // returns true or false, helpful for if statements or other logic
@@ -124,11 +126,11 @@ typeCheck(..).log().fail().return(); // returns the valueToTest and logs the res
 }
 ```
 
-<br/>
+<br/><br/><br/>
 
-### Utility functions and advance usage:
+## ⚡ Utility functions and advance usage:
 
-### -- validType(testExpression, valueToTest);
+### -- validType(valueToTest, testExpression);
 
 -   Does not take any options
 -   Strict validation, throws exception if the test fails;
@@ -136,7 +138,7 @@ typeCheck(..).log().fail().return(); // returns the valueToTest and logs the res
 
 ```javascript
 function yourExistingFunction(valueToTest) {
-    validType('string', valueToTest);
+    validType(valueToTest, 'string');
     // your code here
 }
 ```
@@ -220,7 +222,7 @@ yourCoolFunction(...).fail().return(); // if the test fails, it will throw excep
 addTypeTest('customTypeTest', function (x) {
     return typeof x === 'number';
 });
-if (typeCheck('[customTypeTest]', [1]).test()) {
+if (typeCheck([1], '[customTypeTest]').test()) {
     console.log(999); // logs 999 when validates to true
 }
 ```
@@ -233,51 +235,51 @@ You can perform type checks like this:
 
 ```javascript
 // Basic
-typeCheck('number', 1).test(); // true and returns a boolean
-typeCheck('number', '1').fail().test(); // false and throw exception
-typeCheck('string', 'str').log().test(); // true and logs the test results
+typeCheck(1, 'number').test(); // true and returns a boolean
+typeCheck('1', 'number').fail().test(); // false and throw exception
+typeCheck('str', 'string').log().test(); // true and logs the test results
 // With optional arguments
-typeCheck('string?', null); // true
-typeCheck('string?', undefined); // true
-typeCheck('string?', 'str'); // true
+typeCheck(null, 'string?'); // true
+typeCheck(undefined, 'string?'); // true
+typeCheck('str', 'string?'); // true
 
 // Piped
-typeCheck('string | number', 1); // true
-typeCheck('string | int', 'str'); // true
+typeCheck(1, 'string | number'); // true
+typeCheck('str', 'string | int'); // true
 
 // Array
-typeCheck('[number]', [1]); // true
-typeCheck('[number]', [1, 2, 3]); // true
-typeCheck('[number, number, string]', [1, 3, null]); // Matches the index of the array
+typeCheck([1], '[number]'); // true
+typeCheck([1, 2, 3], '[number]'); // true
+typeCheck([1, 3, null], '[number, number, string]'); // Matches the index of the array
 
 // Object
-typeCheck('{x: string, y: number}', { x: 'string', y: 10 }); // true
-typeCheck('{x: string, y: number}', { x: 'string', y: 'str' }); // false
-typeCheck('{x: string, y: number}', { x: 'string', y: 10, z: 10 }); // false
-typeCheck('{x: string|number, y: number}', { x: 2, y: 10 }); // true
+typeCheck({ x: 'string', y: 10 }, '{x: string, y: number}'); // true
+typeCheck({ x: 'string', y: 'str' }, '{x: string, y: number}'); // false
+typeCheck({ x: 'string', y: 10, z: 10 }, '{x: string, y: number}'); // false
+typeCheck({ x: 2, y: 10 }, '{x: string|number, y: number}'); // true
 
 // Object with optional keys
-typeCheck('{x: string, y: number, z?: number}', { x: 'string', y: 10 }); // true
+typeCheck({ x: 'string', y: 10 }, '{x: string, y: number, z?: number}'); // true
 
 // Object with specific keys to test all other ignore
-typeCheck('{x: string, y: number, ...}', { x: 'string', y: 10, z: 20 }); // true
+typeCheck({ x: 'string', y: 10, z: 20 }, '{x: string, y: number, ...}'); // true
 
 // Object with specific keys to test all test a common test method
-typeCheck('{x: string, y: number, any: number}', { x: 'string', y: 10, z: 20 }); // true
+typeCheck({ x: 'string', y: 10, z: 20 }, '{x: string, y: number, any: number}'); // true
 
 // Nested arrays or objects
-typeCheck('[number, {any: number, x: string}, number]', [1, { x: 'string', y: 10, z: 20 }, 3]); // true
+typeCheck([1, { x: 'string', y: 10, z: 20 }, 3], '[number, {any: number, x: string}, number]'); // true
 
 // With callback functions
-typeCheck('{y: number, x: string}', { x: 'string', y: 10 }, ($this) => {
+typeCheck({ x: 'string', y: 10 }, '{y: number, x: string}', ($this) => {
     console.log('__testLogHere__', $this);
 }).log();
 
 //with log function to see the results in the console
-typeCheck('{y: number, x: string}', { x: 'string', y: 10 }).log();
+typeCheck({ x: 'string', y: 10 }, '{y: number, x: string}').log();
 
 //with fail function to stop execution if the type is not correct
-typeCheck('{y: number, x: string}', { x: 'string', y: 10 }).fail();
+typeCheck({ x: 'string', y: 10 }, '{y: number, x: string}').fail();
 ```
 
 <br/>
