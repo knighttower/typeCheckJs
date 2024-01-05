@@ -895,14 +895,15 @@ function getSettings(input) {
  */
 function typeError() {
     const errorLog = typeErrorLogs[typeErrorLogs.length - 1];
-    console.log(typeErrorLogs);
+    console.warn();
+    console.error('--->Not Valid Type:', errorLog.value);
     //clean the array of error logs
     typeErrorLogs.length = 0;
     throw new Error(`Type Error: "${errorLog.value}" is not valid, see log console for details`);
 }
 
 /**
-* TypeCheck
+* _TypeCheck
 * @param {any} inputVal
 * @param {string} typeExp
 * @param {object | string} params Parameters for the typeCheck function. 
@@ -924,7 +925,7 @@ function typeError() {
 * Params: callback = function ; // callback function
 * @see testUnit for more examples and test cases   
 */
-const typeCheck = (inputVal, typeExp, params) => {
+const _typeCheck = (inputVal, typeExp, params) => {
     return new (class {
         constructor() {
             this.unitTest = testBuilder(typeExp);
@@ -960,6 +961,8 @@ const typeCheck = (inputVal, typeExp, params) => {
         }
         fail() {
             if (!this.testResult) {
+                console.warn('::: Type Error Info :::');
+                this.log();
                 return typeError();
             }
             return this;
@@ -993,7 +996,7 @@ const typeCheck = (inputVal, typeExp, params) => {
 */
 const _tc = (typeExp, __function, params) => {
     return (...args) => {
-        typeCheck(args, typeExp, params);
+        _typeCheck(args, typeExp, params);
         return __function(...args);
     };
 };
@@ -1030,7 +1033,7 @@ const _tcx = (typeExp, __function, params) => {
         return new (class {
             constructor() {
                 this.args = args;
-                this.testResults = typeCheck(args, typeExp, $settings);
+                this.testResults = _typeCheck(args, typeExp, $settings);
                 return this.default();
             }
             default() {
@@ -1038,7 +1041,7 @@ const _tcx = (typeExp, __function, params) => {
 
                 const validOutput = $settings.validOutput ?? false;
                 if (validOutput) {
-                    typeCheck(this.returns, validOutput, 'fail');
+                    _typeCheck(this.returns, validOutput, 'fail');
                 }
                 return this;
             }
@@ -1069,12 +1072,29 @@ const _tcx = (typeExp, __function, params) => {
  * @see directory test for more information and examples
  */
 const validType = (inputVal, typeExp) => {
-    return typeCheck(inputVal, typeExp).fail().test();
+    return _typeCheck(inputVal, typeExp).fail().test();
+};
+
+/**
+* TypeCheck
+* @param {any} inputVal
+* @param {string} typeExp
+* @example typeCheck(1, 'number') // true
+* @example typeCheck([1], '[number]') // true
+* @example typeCheck({x: 1, y: 2}, '{any: number}') // true
+* @example typeCheck({ x: 'string', y: 10 }, '{y: number, x: string}', ($this) => {
+        console.log('__testLogHere__', $this);
+    }) // using call back function
+* @see testUnit for more examples and test cases   
+*/
+const typeCheck = (inputVal, typeExp) => {
+    return _typeCheck(inputVal, typeExp).fail().test();
 };
 
 exports.TypeCheck = typeCheck;
 exports._tc = _tc;
 exports._tcx = _tcx;
+exports._typeCheck = _typeCheck;
 exports.default = typeCheck;
 exports.typeCheck = typeCheck;
 exports.validType = validType;
