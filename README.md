@@ -91,9 +91,32 @@ import { typeCheck } from '@knighttower/type-check-js';
 
 the API for the direct typeCheck function has changed to favor familiarity with Typed Methods where "Value:Type" order is used. That means that the old "typeCheck(Type, Value)" is now deprecated and from now on will be "typeCheck(Value, Type)".
 
-### Basic:
+## Basic:
 
-# -- typeCheck(valueToTest, testExpression, options);
+### typeCheck(valueToTest, testExpression);
+
+-   Does not take any options
+-   Strict validation, throws exception if the test fails;
+-   Less options, but faster to implement. (for more options, use "\_typeCheck" instead. see \_typeCheck section)
+
+```javascript
+/**
+ * @param {any} valueToTest
+ * @param {string} testExpression (see below for patterns)
+ * @see testUnit for more examples and test cases
+ */
+typeCheck(valueToTest, testExpression);
+```
+
+see possible patterns [here](#patterns)
+
+<br/><br/>
+
+# ⚡ Utility functions and advance usage:
+
+Note: notice the "\_" (underscore). This gives you more control for different cases.
+
+### \_typeCheck(valueToTest, testExpression, options);
 
 ```javascript
 /**
@@ -103,19 +126,19 @@ the API for the direct typeCheck function has changed to favor familiarity with 
  * @return {object} TypeCheck Object with chainable methods
  * @see testUnit for more examples and test cases
  */
-typeCheck(valueToTest, testExpression, options);
+_typeCheck(valueToTest, testExpression, options);
 
 // Methods:
-typeCheck(..).test(); // returns true or false, helpful for if statements or other logic
-typeCheck(..).bool; // same as 'test()', returns true or false, but more direct in the intent
-typeCheck(..).log(); // logs the results, helpful for debugging
-typeCheck(..).fail(); // throws exception if the test fails. Strict validation enforcement
-typeCheck(..).return(); // returns the valueToTest (non chainable with 'test' method)
+_typeCheck(..).test(); // returns true or false, helpful for if statements or other logic
+_typeCheck(..).bool; // same as 'test()', returns true or false, but more direct in the intent
+_typeCheck(..).log(); // logs the results, helpful for debugging
+_typeCheck(..).fail(); // throws exception if the test fails. Strict validation enforcement
+_typeCheck(..).return(); // returns the valueToTest (non chainable with 'test' method)
 
 //Chain methods
-typeCheck(..).log().test(); // logs the results and returns true or false
-typeCheck(..).fail().test(); // throws exception if the test fails and returns true or false
-typeCheck(..).log().fail().return(); // returns the valueToTest and logs the results and throws exception if the test fails
+_typeCheck(..).log().test(); // logs the results and returns true or false
+_typeCheck(..).fail().test(); // throws exception if the test fails and returns true or false
+_typeCheck(..).log().fail().return(); // returns the valueToTest and logs the results and throws exception if the test fails
 
 
 // Options
@@ -127,8 +150,6 @@ typeCheck(..).log().fail().return(); // returns the valueToTest and logs the res
 ```
 
 <br/><br/><br/>
-
-## ⚡ Utility functions and advance usage:
 
 ### -- validType(valueToTest, testExpression);
 
@@ -235,9 +256,9 @@ You can perform type checks like this:
 
 ```javascript
 // Basic
-typeCheck(1, 'number').test(); // true and returns a boolean
-typeCheck('1', 'number').fail().test(); // false and throw exception
-typeCheck('str', 'string').log().test(); // true and logs the test results
+_typeCheck(1, 'number').test(); // true and returns a boolean
+_typeCheck('1', 'number').fail().test(); // false and throw exception
+_typeCheck('str', 'string').log().test(); // true and logs the test results
 // With optional arguments
 typeCheck(null, 'string?'); // true
 typeCheck(undefined, 'string?'); // true
@@ -271,18 +292,19 @@ typeCheck({ x: 'string', y: 10, z: 20 }, '{x: string, y: number, any: number}');
 typeCheck([1, { x: 'string', y: 10, z: 20 }, 3], '[number, {any: number, x: string}, number]'); // true
 
 // With callback functions
-typeCheck({ x: 'string', y: 10 }, '{y: number, x: string}', ($this) => {
+_typeCheck({ x: 'string', y: 10 }, '{y: number, x: string}', ($this) => {
     console.log('__testLogHere__', $this);
 }).log();
 
 //with log function to see the results in the console
-typeCheck({ x: 'string', y: 10 }, '{y: number, x: string}').log();
+_typeCheck({ x: 'string', y: 10 }, '{y: number, x: string}').log();
 
 //with fail function to stop execution if the type is not correct
-typeCheck({ x: 'string', y: 10 }, '{y: number, x: string}').fail();
+_typeCheck({ x: 'string', y: 10 }, '{y: number, x: string}').fail();
 ```
 
 <br/>
+<a name="patterns"></a>
 
 ## Possible patterns
 
