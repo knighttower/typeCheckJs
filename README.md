@@ -151,11 +151,9 @@ _typeCheck(..).log().fail().return(); // returns the valueToTest and logs the re
 
 <br/><br/><br/>
 
-### -- validType(valueToTest, testExpression);
+### validType(valueToTest, testExpression, options);
 
--   Does not take any options
--   Strict validation, throws exception if the test fails;
--   Less options, but faster to implement
+Alias function for \_typeCheck(valueToTest, testExpression, options);
 
 ```javascript
 function yourExistingFunction(valueToTest) {
@@ -166,7 +164,7 @@ function yourExistingFunction(valueToTest) {
 
 <br/>
 
-### -- \_tc(testExpression, \_\_function, options);
+### \_tc(testExpression, \_\_function, options);
 
 -   Wrapper for "typeCheck" (\_tc) to implement functions with type checking.
 -   Does not validate the "return value" of the function. (use "\_tcx" instead).
@@ -191,7 +189,7 @@ yourCoolFunction(44.5, 'hello'); // validates that both are numbers
 
 <br/>
 
-### -- \_tcx(testExpression, \_\_function, options);
+### \_tcx(testExpression, \_\_function, options);
 
 -   Wrapper for "typeCheck" with 'return X' (\_tcx) to implement functions with type checking
 -   Validates the "return value" of the function.

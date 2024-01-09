@@ -1062,18 +1062,13 @@ System.register('TypeCheck', [], (function (exports) {
             });
 
             /**
-             * validType is a helper function to quick validate a value with a type expression, is a wrapper for typeCheck with less optional arguments
-             * @param {string} typeExp Expression to test
-             * @param {any} inputVal Value to test
-             * @return {bool} isValidType
-             * @example validType(1, '[number]') // true
-             * @example validType('str', '[number]') // false - throws exception
-             * @usage (anyInputValue, stringTypeExpression)
-             * @usage returns boolean
-             * @see directory test for more information and examples
+             * Alias for _typeCheck()
+             * @param {any} inputVal
+             * @param {string} typeExp
+             * @param {object | string} params Parameters for the typeCheck function.
              */
-            const validType = exports('validType', (inputVal, typeExp) => {
-                return _typeCheck(inputVal, typeExp).fail().test();
+            const validType = exports('validType', (inputVal, typeExp, params) => {
+                return _typeCheck(inputVal, typeExp, params);
             });
 
             /**
