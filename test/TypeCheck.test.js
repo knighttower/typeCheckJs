@@ -117,7 +117,9 @@ console.log(validType([1], '[number]'));
 typeCheck(['rrr'], '[string]');
 
 // Test for array types
-test('Array Type: [number]', () => {
+test('Array Type', () => {
+    assert.equal(_typeCheck([], '[null]').test(), false);
+    assert.equal(_typeCheck([null], '[null]').test(), true);
     assert.equal(_typeCheck([1], '[number]').test(), true);
     assert.equal(_typeCheck(['str'], '[number]').test(), false);
     assert.equal(_typeCheck([1, 'str'], '[number, string]').test(), true);
@@ -157,4 +159,22 @@ test('objects: {key: type, key: type}', () => {
     assert.equal(_typeCheck({ x: 'string', y: 'str' }, '{x: string, y: number|null}').test(), false);
     assert.equal(_typeCheck({ x: 'string', y: 10, z: 20 }, '{x: string, y: number, z?: number}').test(), true);
     assert.equal(_typeCheck({ x: 'string', y: 10, z: 'str' }, '{x: string, y: number}').test(), false);
+});
+
+// create tests for {key1: type}
+test('objects: {key: any}', () => {
+    assert.equal(_typeCheck({}, '{any: null}').log().test(), true);
+    assert.equal(_typeCheck({}, '{any: number}').log().test(), false);
+    assert.equal(_typeCheck({}, '{any: number|string}').log().test(), false);
+    assert.equal(_typeCheck({}, '{any: number|string|null}').log().test(), true);
+    assert.equal(_typeCheck({}, '{any: array}').log().test(), false);
+    assert.equal(_typeCheck({ x: null }, '{any: null}').log().test(), true);
+    assert.equal(_typeCheck({ x: null }, '{any: number}').log().test(), false);
+    assert.equal(_typeCheck({ x: null }, '{any: number|string}').log().test(), false);
+    assert.equal(_typeCheck({ x: null }, '{any: number|string|null}').log().test(), true);
+    assert.equal(_typeCheck({ y: 33, x: null }, '{any: array}').log().test(), false);
+    assert.equal(_typeCheck({ y: 33, x: null }, '{any: number}').log().test(), false);
+    assert.equal(_typeCheck({ y: 33, x: null }, '{any: number|string}').log().test(), false);
+    assert.equal(_typeCheck({ y: 33, x: null }, '{y: number, any: number|null}').log().test(), true);
+    assert.equal(_typeCheck({ x: 'string', y: 10, z: 20 }, '{x: string, y: number, any: number}').test(), true);
 });

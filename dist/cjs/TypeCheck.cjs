@@ -711,7 +711,7 @@ const runBasicTest = (inputVal, tests) => {
 
 const runArrayTest = (inputVal, tests) => {
     // If the input is not an array, return false
-    if (!typeOf(inputVal, 'array')) {
+    if (!typeOf(inputVal, 'array') || inputVal.length === 0) {
         return false;
     }
     // Else, test each value in the array
@@ -803,7 +803,11 @@ class HandleObjects {
     }
 
     testObjAllAny() {
-        return Object.values(this.inputObject).every((value) => {
+        const testValues = Object.values(this.inputObject);
+        if (testValues.length === 0) {
+            return runRouteTest(null, this.testCollection.get('any'));
+        }
+        return testValues.every((value) => {
             return runRouteTest(value, this.testCollection.get('any'));
         });
     }
