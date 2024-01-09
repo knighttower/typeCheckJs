@@ -1067,9 +1067,7 @@ System.register('TypeCheck', [], (function (exports) {
              * @param {string} typeExp
              * @param {object | string} params Parameters for the typeCheck function.
              */
-            const validType = exports('validType', (inputVal, typeExp, params) => {
-                return _typeCheck(inputVal, typeExp, params);
-            });
+            const validType = exports('validType', _typeCheck);
 
             /**
             * TypeCheck

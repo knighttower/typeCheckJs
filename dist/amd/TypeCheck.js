@@ -1064,9 +1064,7 @@ define(['exports'], (function (exports) { 'use strict';
      * @param {string} typeExp
      * @param {object | string} params Parameters for the typeCheck function.
      */
-    const validType = (inputVal, typeExp, params) => {
-        return _typeCheck(inputVal, typeExp, params);
-    };
+    const validType = _typeCheck;
 
     /**
     * TypeCheck
