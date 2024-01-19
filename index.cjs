@@ -5,14 +5,14 @@ const { TypeCheck, _tc, _tcx, _typeCheck, typeCheck, validType } = require('./di
 // Single Modules and Aliases from: types.cjs
 const { typesMap } = require('./dist/cjs/types.cjs');
 
- module.exports = { 
- addTypeTest,
-testBuilder,
-TypeCheck,
-_tc,
-_tcx,
-_typeCheck,
-typeCheck,
-validType,
-typesMap 
- };
+module.exports = {
+    addTypeTest,
+    testBuilder,
+    TypeCheck,
+    _tc,
+    _tcx,
+    _typeCheck,
+    typeCheck,
+    validType,
+    typesMap,
+};

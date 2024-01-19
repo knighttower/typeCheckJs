@@ -893,9 +893,10 @@ function getSettings(input) {
 /**
  * Throw an error with the last typeErrorLogs
  */
-function typeError() {
+function typeError(inputVal) {
     const errorLog = typeErrorLogs[typeErrorLogs.length - 1];
-    console.warn();
+    console.warn('::::::::::::: Type error or not valid ::::::::::::::');
+    console.warn('Input Value used: ', inputVal);
     console.error('--->Not Valid Type:', errorLog.value);
     //clean the array of error logs
     typeErrorLogs.length = 0;
@@ -963,7 +964,7 @@ const _typeCheck = (inputVal, typeExp, params) => {
             if (!this.testResult) {
                 console.warn('::: Type Error Info :::');
                 this.log();
-                return typeError();
+                return typeError(inputVal);
             }
             return this;
         }
