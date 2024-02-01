@@ -6,6 +6,12 @@ TypeCheck JS is a JavaScript library designed for fast and efficient type checki
 [![release version](https://github.com/knighttower/typeCheckJs/actions/workflows/pre-release.yml/badge.svg)](https://github.com/knighttower/typeCheckJs/actions/workflows/pre-release.yml)
 [![NPM published](https://github.com/knighttower/typeCheckJs/actions/workflows/to-npm.yml/badge.svg)](https://github.com/knighttower/typeCheckJs/actions/workflows/to-npm.yml)
 
+#### Updates:
+----- 2024 -----
+- fixed _tc and _tcx to return the value of the function
+- added _tc and _tcx to the documentation
+- fixed isValidType to better validate and return bool
+
 ### Installation
 
 #### Via npm
@@ -174,7 +180,7 @@ function yourExistingFunction(valueToTest) {
 -   Note: all test expressions are passed as 'array' like because args are 1 or more.
 
 ```javascript
-const yourCoolFunction = _tc('[number, number]', function (myVar, theOtherVar) {
+const yourCoolFunction = _tc(['number', 'string'], function (myVar, theOtherVar) {
     // .. your code here
 });
 
@@ -183,7 +189,7 @@ yourCoolFunction(44.5, 'hello'); // validates that both are numbers
 // Options
 {
     log: false, // default false. Same as method log()
-    fail: false, // default false. Same as method fail()
+    fail: false, // default true. Same as method fail()
 }
 ```
 
@@ -201,7 +207,7 @@ yourCoolFunction(44.5, 'hello'); // validates that both are numbers
 -   Note: all test expressions are passed as 'array' like because args are 1 or more.
 
 ```javascript
-const yourCoolFunction = _tcx('[number, string]', function (myVar, theOtherVar) {
+const yourCoolFunction = _tcx(['number', 'string'], function (myVar, theOtherVar) {
     // .. your code here
     return 'hello';
 }, {validOutput: 'string'});
@@ -212,7 +218,7 @@ yourCoolFunction(44.5, 'hello'); // validates that arg1 is 'number' and arg2 is 
 {
     validOutput: 'testExpression', // default null. Same as method log()
     log: false, // default false. Same as method log()
-    fail: false, // default false. Same as method fail()
+    fail: false, // default true. Same as method fail()
 }
 
 // Built in features

@@ -702,8 +702,9 @@ const cachedSettings = new Map();
 const runBasicTest = (inputVal, tests) => {
     return tests.some((test) => {
         const testResult = test(inputVal);
+
         if (!testResult) {
-            typeErrorLogs.push({ value: inputVal, tests: tests });
+            typeErrorLogs.push({ value: inputVal, tests: String(tests), found: typeOf(inputVal) });
         }
         return testResult;
     });
@@ -899,9 +900,10 @@ function getSettings(input) {
  */
 function typeError(inputVal) {
     const errorLog = typeErrorLogs[typeErrorLogs.length - 1];
-    console.warn('::::::::::::: Type error or not valid ::::::::::::::');
-    console.warn('Input Value used: ', inputVal);
-    console.error('--->Not Valid Type:', errorLog.value);
+    console.log('::::::::::::: Type error or not valid ::::::::::::::');
+    console.log('Input Value used: ', inputVal);
+    console.log('---> Value Found:', errorLog.found);
+    console.log('---> Test Permormed:', errorLog.tests);
     //clean the array of error logs
     typeErrorLogs.length = 0;
     throw new Error(`Type Error: "${errorLog.value}" is not valid, see log console for details`);
@@ -941,6 +943,7 @@ const _typeCheck = (inputVal, typeExp, params) => {
             this.testData = {
                 typeExp,
                 inputVal,
+                inputType: typeOf(inputVal),
                 callback: this.callback,
                 unitTest: this.unitTest,
                 testResult: this.testResult,
@@ -961,12 +964,12 @@ const _typeCheck = (inputVal, typeExp, params) => {
             return this.testResult;
         }
         log() {
+            console.log('-------------------------- \n ::: Test Data Info :::');
             console.table(this.testData);
             return this;
         }
         fail() {
             if (!this.testResult) {
-                console.warn('::: Type Error Info :::');
                 this.log();
                 return typeError(inputVal);
             }
@@ -981,7 +984,7 @@ const _typeCheck = (inputVal, typeExp, params) => {
 /**
 * _tc is a helper function to wrap a function with typeCheck
 * It is basic but faster the _tcx (neglible but if micro-optimization is needed)
-* @param {string} typeExp Expression to test
+* @param {array} typeExp array of types to test
 * @param {function} __function Function to wrap
 * @param {object | string} params Parameters for the typeCheck function.
 * @return {function} Wrapped function
@@ -992,6 +995,7 @@ const _typeCheck = (inputVal, typeExp, params) => {
 * @usage (stringTypeExpression, Function(), params: object | string)
 * @usage params: object = { log: boolean, fail: boolean, return: boolean, validOutput: string }
 * @usage params: string = 'log' | 'fail' | 'return' 
+* @usage defaults: log = false, fail = true, return = false
 * @notes this function does not accept callback arguments and when using shorthand arguments (string) it does not accept validOutput
 * Params: log = true ; // logs the testData
 * Params: fail = true ; // throws an error when the test fails
@@ -999,8 +1003,9 @@ const _typeCheck = (inputVal, typeExp, params) => {
 * Params: callback = function ; // callback function
 * @see directory test for more information and examples
 */
-const _tc = (typeExp, __function, params) => {
+const _tc = (typeExp, __function, params = {}) => {
     return (...args) => {
+        params = { ...{ fail: true }, ...params };
         _typeCheck(args, typeExp, params);
         return __function(...args);
     };
@@ -1032,8 +1037,9 @@ const _tc = (typeExp, __function, params) => {
 * @see directory test for more information and examples
 */
 const _tcx = (typeExp, __function, params) => {
-    const $settings = getSettings(params);
-
+    let $settings = getSettings(params);
+    //set default as true
+    $settings = { ...{ fail: true }, ...$settings };
     return (...args) => {
         return new (class {
             constructor() {
@@ -1066,12 +1072,13 @@ const _tcx = (typeExp, __function, params) => {
 };
 
 /**
- * Alias for _typeCheck()
+ * Test the type but does not throw an error, althought it can use the rest of the chain methods
  * @param {any} inputVal
  * @param {string} typeExp
- * @param {object | string} params Parameters for the typeCheck function.
  */
-const validType = _typeCheck;
+const validType = (inputVal, typeExp) => {
+    return _typeCheck(inputVal, typeExp).test();
+};
 
 /**
 * TypeCheck
@@ -1086,7 +1093,7 @@ const validType = _typeCheck;
 * @see testUnit for more examples and test cases   
 */
 const typeCheck = (inputVal, typeExp) => {
-    return _typeCheck(inputVal, typeExp).fail().test();
+    return _typeCheck(inputVal, typeExp).fail();
 };
 
 exports.TypeCheck = typeCheck;

@@ -21,14 +21,14 @@ const recordsTotest = 100;
 benchmark(
     '_tc',
     () => {
-        const typeExp = ['number'];
-        const __function = (x) => x + 1;
+        const typeExp = ['[number]'];
+        const __function = (x) => x;
         const params = {};
 
         const tc = _tc(typeExp, __function, params);
 
         const records = [];
-        for (let i = 0; i < 10; i++) {
+        for (let i = 1; i < 10; i++) {
             records.push(i);
         }
 
@@ -41,7 +41,7 @@ benchmark(
 benchmark(
     '_tcx',
     () => {
-        const typeExp = ['number'];
+        const typeExp = ['[number]'];
         const __function = (x) => x + 1;
         const params = {};
 
@@ -92,7 +92,7 @@ console.log(
 console.log(_typeCheck([1], '[number]').return()); // returns [1], the inputValue
 
 let myCoolFunction;
-myCoolFunction = _tc('[number, number]', function (myVar, hello) {
+myCoolFunction = _tc(['number', 'string'], function (myVar, hello) {
     //code
     console.log(myVar, hello);
     return 1000;
@@ -101,7 +101,7 @@ myCoolFunction = _tc('[number, number]', function (myVar, hello) {
 myCoolFunction(44.5, 'hello');
 
 myCoolFunction = _tcx(
-    '[number, number]',
+    ['number', 'string'],
     function (myVar, hello) {
         //code
         return [myVar, hello];
