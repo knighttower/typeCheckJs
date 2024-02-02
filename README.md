@@ -11,6 +11,7 @@ TypeCheck JS is a JavaScript library designed for fast and efficient type checki
 - fixed _tc and _tcx to return the value of the function
 - added _tc and _tcx to the documentation
 - fixed isValidType to better validate and return bool
+- added custom error message to options
 
 ### Installation
 
@@ -152,6 +153,7 @@ _typeCheck(..).log().fail().return(); // returns the valueToTest and logs the re
     log: true, // default false. Same as method log()
     fail: true, // default false. Same as method fail()
     callback: function, // default null. Only available in 'options'
+    error: string, // custom error message
 }
 ```
 
@@ -190,6 +192,7 @@ yourCoolFunction(44.5, 'hello'); // validates that both are numbers
 {
     log: false, // default false. Same as method log()
     fail: false, // default true. Same as method fail()
+    error: string, // custom error message
 }
 ```
 
@@ -219,6 +222,7 @@ yourCoolFunction(44.5, 'hello'); // validates that arg1 is 'number' and arg2 is 
     validOutput: 'testExpression', // default null. Same as method log()
     log: false, // default false. Same as method log()
     fail: false, // default true. Same as method fail()
+    error: string, // custom error message
 }
 
 // Built in features

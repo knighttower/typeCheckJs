@@ -907,7 +907,7 @@ System.register('TypeCheck', [], (function (exports) {
                 console.log('---> Test Permormed:', errorLog.tests);
                 //clean the array of error logs
                 typeErrorLogs.length = 0;
-                throw new Error(`Type Error: "${errorLog.value}" is not valid, see log console for details`);
+                throw new Error(`Type Error: "${errorLog.value}" is not valid, see log console for details`, false, false);
             }
 
             /**
@@ -972,6 +972,7 @@ System.register('TypeCheck', [], (function (exports) {
                     fail() {
                         if (!this.testResult) {
                             this.log();
+                            this.settings?.error && console.log('-----> Error: ', this.settings.error);
                             return typeError(inputVal);
                         }
                         return this;
@@ -1093,8 +1094,8 @@ System.register('TypeCheck', [], (function (exports) {
                 }) // using call back function
             * @see testUnit for more examples and test cases   
             */
-            const typeCheck = (inputVal, typeExp) => {
-                return _typeCheck(inputVal, typeExp).fail();
+            const typeCheck = (inputVal, typeExp, params = null) => {
+                return _typeCheck(inputVal, typeExp, params).fail();
             }; exports({ default: typeCheck, typeCheck: typeCheck, TypeCheck: typeCheck });
 
         })

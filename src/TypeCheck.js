@@ -213,7 +213,7 @@ function typeError(inputVal) {
     console.log('---> Test Permormed:', errorLog.tests);
     //clean the array of error logs
     typeErrorLogs.length = 0;
-    throw new Error(`Type Error: "${errorLog.value}" is not valid, see log console for details`);
+    throw new Error(`Type Error: "${errorLog.value}" is not valid, see log console for details`, false, false);
 }
 
 /**
@@ -278,6 +278,7 @@ const _typeCheck = (inputVal, typeExp, params) => {
         fail() {
             if (!this.testResult) {
                 this.log();
+                this.settings?.error && console.log('-----> Error: ', this.settings.error);
                 return typeError(inputVal);
             }
             return this;
@@ -399,8 +400,8 @@ const validType = (inputVal, typeExp) => {
     }) // using call back function
 * @see testUnit for more examples and test cases   
 */
-const typeCheck = (inputVal, typeExp) => {
-    return _typeCheck(inputVal, typeExp).fail();
+const typeCheck = (inputVal, typeExp, params = null) => {
+    return _typeCheck(inputVal, typeExp, params).fail();
 };
 
 export { _tc, _tcx, validType, typeCheck as default, typeCheck, typeCheck as TypeCheck, _typeCheck };

@@ -16,7 +16,7 @@ const benchmark = (name, fn, iterations) => {
     console.log(`${name}: ${(end - start).toFixed(3)}ms`);
 };
 
-const recordsTotest = 100;
+const recordsTotest = 1000;
 // Benchmark the _tc function with 100 records
 benchmark(
     '_tc',
@@ -98,7 +98,7 @@ myCoolFunction = _tc(['number', 'string'], function (myVar, hello) {
     return 1000;
 });
 
-myCoolFunction(44.5, 'hello');
+myCoolFunction(44.5, 'hello', {});
 
 myCoolFunction = _tcx(
     ['number', 'string'],
