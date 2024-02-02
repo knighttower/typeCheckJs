@@ -896,13 +896,15 @@ function getSettings(input) {
  */
 function typeError(inputVal) {
     const errorLog = typeErrorLogs[typeErrorLogs.length - 1];
-    console.log('::::::::::::: Type error or not valid ::::::::::::::');
-    console.log('Input Value used: ', inputVal);
+    console.log('\n::::::::::::: Type error or not valid ::::::::::::::');
+    console.log('Input Value used: ', String(inputVal));
     console.log('---> Value Found:', errorLog.found);
     console.log('---> Test Permormed:', errorLog.tests);
     //clean the array of error logs
     typeErrorLogs.length = 0;
-    throw new Error(`Type Error: "${errorLog.value}" is not valid, see log console for details`, false, false);
+    throw new Error(
+        `\n\n---------------------\nTypeCheck Error ---> The Type used is invalid: "${errorLog.value}". \n see logged error for details\n---------------------\n\n`,
+    );
 }
 
 /**
@@ -967,7 +969,7 @@ const _typeCheck = (inputVal, typeExp, params) => {
         fail() {
             if (!this.testResult) {
                 this.log();
-                this.settings?.error && console.log('-----> Error: ', this.settings.error);
+                this.settings?.error && console.log('\n\n-----> Error Message: ', this.settings.error);
                 return typeError(inputVal);
             }
             return this;
