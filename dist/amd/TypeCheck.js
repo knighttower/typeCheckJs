@@ -899,7 +899,7 @@ define(['exports'], (function (exports) { 'use strict';
     function typeError(inputVal) {
         const errorLog = typeErrorLogs[typeErrorLogs.length - 1];
         console.log('\n::::::::::::: Type error or not valid ::::::::::::::');
-        console.log('Input Value used: ', String(inputVal));
+        console.log('Input Value used: ', inputVal);
         console.log('---> Value Found:', errorLog.found);
         console.log('---> Test Permormed:', errorLog.tests);
         //clean the array of error logs
