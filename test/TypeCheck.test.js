@@ -178,3 +178,9 @@ test('objects: {key: any}', () => {
     assert.equal(_typeCheck({ y: 33, x: null }, '{y: number, any: number|null}').log().test(), true);
     assert.equal(_typeCheck({ x: 'string', y: 10, z: 20 }, '{x: string, y: number, any: number}').test(), true);
 });
+
+test('array with objects: [{key: type, key: type}]', () => {
+    // console.log(typeCheck([{ x: 2, y: 10 }], '[{x: number}]').log());
+    assert.equal(_typeCheck([{ x: 2, y: 10 }], '[{x: number, ...}]').test(), true);
+    assert.equal(_typeCheck([{ x: 2, y: 10 }], '[{x: number, any: number}]').test(), true);
+});
