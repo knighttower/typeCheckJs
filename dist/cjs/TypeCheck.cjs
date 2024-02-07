@@ -704,7 +704,7 @@ const runBasicTest = (inputVal, tests) => {
         const testResult = test(inputVal);
 
         if (!testResult) {
-            typeErrorLogs.push({ value: inputVal, tests: String(tests), found: typeOf(inputVal) });
+            pushToErrorLogs(inputVal, tests);
         }
         return testResult;
     });
@@ -765,10 +765,14 @@ class HandleObjects {
                 // '{key1: type, key2: type}'; // all keys
                 for (const k in this.inputObject) {
                     if (!this.testCollection.has(k)) {
+                        pushToErrorLogs(
+                            this.inputObject,
+                            `Key: "${k}" not found in the test collection, or use the "any" (any:[type]) key test or "..." after the last key in the test collection {key1: type, key2: type, ...} to only test a few keys.`,
+                        );
                         return false;
                     }
                 }
-                // when testOnly it will bypass this and check only those found in the test collection
+                // when testOnly, it will bypass this and check only those found in the test collection
                 // even if the test value has more keys
                 break;
         }
@@ -900,6 +904,7 @@ function getSettings(input) {
  */
 function typeError(inputVal) {
     const errorLog = typeErrorLogs[typeErrorLogs.length - 1];
+
     console.log('\n::::::::::::: Type error or not valid ::::::::::::::');
     console.log('Input Value used: ', inputVal);
     console.log('---> Value Found:', errorLog.found);
@@ -907,8 +912,16 @@ function typeError(inputVal) {
     //clean the array of error logs
     typeErrorLogs.length = 0;
     throw new Error(
-        `\n\n---------------------\nTypeCheck Error ---> The Type used is invalid: "${errorLog.value}". \n see logged error for details\n---------------------\n\n`,
+        `\n\n---------------------\nTypeCheck Error --->\n\n The value must not be of type (Type found) = "${errorLog.found}". \n\n The Type used is invalid for value: "${errorLog.value}". \n\n see logged error for details\n---------------------\n\n`,
     );
+}
+
+function pushToErrorLogs(inputVal, tests) {
+    typeErrorLogs.push({
+        value: JSON.stringify(inputVal),
+        tests: JSON.stringify(tests),
+        found: typeOf(inputVal),
+    });
 }
 
 /**
