@@ -41,7 +41,7 @@
     ],
     "scripts": {
         "production": "npm run build",
-        "build": "npm run webpack && npm run rollup && npm run buildExports && npm run bumpVersion && npm run fixIndexFormat",
+        "build": "npm run webpack && npm run rollup && npm run buildExports && npm run bumpVersion",
         "fixIndexFormat": "prettier --config .prettierrc.json --write ./index.js && prettier --config .prettierrc.json --write ./index.cjs",
         "bumpVersion": "node ./node_modules/@knighttower/js-utility-functions/nodeUtils/BumpVersion.cjs",
         "buildExports": "node ./node_modules/@knighttower/js-utility-functions/nodeUtils/BuildExports.js --file ./src/TypeCheck.js && node ./node_modules/@knighttower/js-utility-functions/nodeUtils/BuildExports.js --file ./dist/cjs/TypeCheck.cjs --type=cjs",
