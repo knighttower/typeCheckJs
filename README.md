@@ -12,6 +12,7 @@ TypeCheck JS is a JavaScript library designed for fast and efficient type checki
 - added _tc and _tcx to the documentation
 - fixed isValidType to better validate and return bool
 - added custom error message to options
+- custom types
 
 ### Installation
 
