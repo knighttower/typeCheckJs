@@ -3,6 +3,8 @@ System.register('TypeCheck', [], (function (exports) {
     return {
         execute: (function () {
 
+            exports('testBuilder', testBuilder);
+
             // Author Knighttower
             // MIT License
             // [2022] [Knighttower] https://github.com/knighttower
@@ -248,6 +250,15 @@ System.register('TypeCheck', [], (function (exports) {
                 }
 
                 if (test) {
+                    if (test.includes('|')) {
+                        for (let type of test.split('|')) {
+                            if (inputType === type) {
+                                return type;
+                            }
+                        }
+                        return false;
+                    }
+
                     return test === inputType;
                 }
 
@@ -470,7 +481,7 @@ System.register('TypeCheck', [], (function (exports) {
 
             // typeOf is used here insteand of the native typeof because it can handle better the identifications of arrays and objects
 
-            const typesMap = new Map([
+            const typesMap = exports('typesMap', new Map([
                 ['array', (_var_) => typeOf(_var_, 'array')],
                 ['bigInt', (_var_) => typeof _var_ === 'bigint'],
                 ['boolean', (_var_) => typeof _var_ === 'boolean'],
@@ -490,7 +501,7 @@ System.register('TypeCheck', [], (function (exports) {
                 ['undefined', (_var_) => typeof _var_ === 'undefined'],
                 ['weakMap', (_var_) => _var_ instanceof WeakMap],
                 ['weakSet', (_var_) => _var_ instanceof WeakSet],
-            ]);
+            ]));
 
             //  type definitions
 
@@ -694,6 +705,22 @@ System.register('TypeCheck', [], (function (exports) {
                 cachedTests.set(strExp, testUnit);
                 return testUnit;
             }
+
+            /**
+             * Add a new type test
+             * @param {string} name The name of the test to add
+             * @param {function} testUnit The test function
+             * @return {boolean} true if the test was added
+             * @throws {Error} if the test already exists
+             */
+            const addTypeTest = exports('addTypeTest', (name, testUnit) => {
+                if (!typesMap.has(name)) {
+                    typesMap.set(name, testUnit);
+                    return true;
+                }
+
+                throw new Error(`Type Error: "${name}" already exists`);
+            });
 
             // Error collectot
             const typeErrorLogs = [];

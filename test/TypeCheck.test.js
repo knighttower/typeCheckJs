@@ -1,7 +1,6 @@
 // @vitest-environment jsdom
 import { test } from 'vitest';
-import { addTypeTest } from '../src/TestBuilder.js';
-import { _typeCheck, typeCheck, _tc, _tcx, validType } from '../src/TypeCheck.js';
+import { addTypeTest, _typeCheck, typeCheck, _tc, _tcx, validType, typesMap } from '../src/TypeCheck.js';
 import assert from 'assert';
 
 const benchmark = (name, fn, iterations) => {
@@ -62,6 +61,7 @@ addTypeTest('customTypeTest', function (x) {
 if (_typeCheck([1], '[customTypeTest]').test()) {
     console.log(999);
 }
+console.log('______log______', typesMap);
 
 _typeCheck([1, { x: 'string', y: 10, z: 20 }, 3], '[number, {y: string, x: string}, number]').test();
 if (_typeCheck([1], '[string]').test()) {

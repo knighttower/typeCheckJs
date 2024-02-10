@@ -247,6 +247,15 @@ function typeOf(input, test) {
     }
 
     if (test) {
+        if (test.includes('|')) {
+            for (let type of test.split('|')) {
+                if (inputType === type) {
+                    return type;
+                }
+            }
+            return false;
+        }
+
         return test === inputType;
     }
 
@@ -694,6 +703,22 @@ function testBuilder(strExp) {
     return testUnit;
 }
 
+/**
+ * Add a new type test
+ * @param {string} name The name of the test to add
+ * @param {function} testUnit The test function
+ * @return {boolean} true if the test was added
+ * @throws {Error} if the test already exists
+ */
+const addTypeTest = (name, testUnit) => {
+    if (!typesMap.has(name)) {
+        typesMap.set(name, testUnit);
+        return true;
+    }
+
+    throw new Error(`Type Error: "${name}" already exists`);
+};
+
 // Error collectot
 const typeErrorLogs = [];
 // Setting cache
@@ -1116,6 +1141,9 @@ exports.TypeCheck = typeCheck;
 exports._tc = _tc;
 exports._tcx = _tcx;
 exports._typeCheck = _typeCheck;
+exports.addTypeTest = addTypeTest;
 exports.default = typeCheck;
+exports.testBuilder = testBuilder;
 exports.typeCheck = typeCheck;
+exports.typesMap = typesMap;
 exports.validType = validType;

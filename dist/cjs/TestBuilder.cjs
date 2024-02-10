@@ -247,6 +247,15 @@ function typeOf(input, test) {
     }
 
     if (test) {
+        if (test.includes('|')) {
+            for (let type of test.split('|')) {
+                if (inputType === type) {
+                    return type;
+                }
+            }
+            return false;
+        }
+
         return test === inputType;
     }
 
@@ -713,3 +722,4 @@ const addTypeTest = (name, testUnit) => {
 exports.addTypeTest = addTypeTest;
 exports.default = testBuilder;
 exports.testBuilder = testBuilder;
+exports.typesMap = typesMap;

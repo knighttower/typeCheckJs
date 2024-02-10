@@ -221,4 +221,4 @@ const addTypeTest = (name, testUnit) => {
     throw new Error(`Type Error: "${name}" already exists`);
 };
 
-export { testBuilder, addTypeTest, testBuilder as default };
+export { testBuilder, addTypeTest, testBuilder as default, typesMap };

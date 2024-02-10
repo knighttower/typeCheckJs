@@ -245,6 +245,15 @@ define(['exports'], (function (exports) { 'use strict';
         }
 
         if (test) {
+            if (test.includes('|')) {
+                for (let type of test.split('|')) {
+                    if (inputType === type) {
+                        return type;
+                    }
+                }
+                return false;
+            }
+
             return test === inputType;
         }
 
@@ -711,6 +720,7 @@ define(['exports'], (function (exports) { 'use strict';
     exports.addTypeTest = addTypeTest;
     exports.default = testBuilder;
     exports.testBuilder = testBuilder;
+    exports.typesMap = typesMap;
 
     Object.defineProperty(exports, '__esModule', { value: true });
 

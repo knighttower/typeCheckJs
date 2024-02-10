@@ -253,6 +253,15 @@ System.register('TestBuilder', [], (function (exports) {
                 }
 
                 if (test) {
+                    if (test.includes('|')) {
+                        for (let type of test.split('|')) {
+                            if (inputType === type) {
+                                return type;
+                            }
+                        }
+                        return false;
+                    }
+
                     return test === inputType;
                 }
 
@@ -475,7 +484,7 @@ System.register('TestBuilder', [], (function (exports) {
 
             // typeOf is used here insteand of the native typeof because it can handle better the identifications of arrays and objects
 
-            const typesMap = new Map([
+            const typesMap = exports('typesMap', new Map([
                 ['array', (_var_) => typeOf(_var_, 'array')],
                 ['bigInt', (_var_) => typeof _var_ === 'bigint'],
                 ['boolean', (_var_) => typeof _var_ === 'boolean'],
@@ -495,7 +504,7 @@ System.register('TestBuilder', [], (function (exports) {
                 ['undefined', (_var_) => typeof _var_ === 'undefined'],
                 ['weakMap', (_var_) => _var_ instanceof WeakMap],
                 ['weakSet', (_var_) => _var_ instanceof WeakSet],
-            ]);
+            ]));
 
             //  type definitions
 

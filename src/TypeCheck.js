@@ -1,5 +1,5 @@
 import { typeOf, isEmpty } from '@knighttower/js-utility-functions';
-import testBuilder from './TestBuilder.js';
+import { typesMap, testBuilder, addTypeTest } from './TestBuilder.js';
 
 // Error collectot
 const typeErrorLogs = [];
@@ -419,4 +419,15 @@ const typeCheck = (inputVal, typeExp, params = null) => {
     return _typeCheck(inputVal, typeExp, params).fail();
 };
 
-export { _tc, _tcx, validType, typeCheck as default, typeCheck, typeCheck as TypeCheck, _typeCheck };
+export {
+    _tc,
+    _tcx,
+    validType,
+    typeCheck as default,
+    typeCheck,
+    typeCheck as TypeCheck,
+    _typeCheck,
+    typesMap,
+    testBuilder,
+    addTypeTest,
+};

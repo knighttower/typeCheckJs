@@ -243,6 +243,15 @@ function typeOf(input, test) {
     }
 
     if (test) {
+        if (test.includes('|')) {
+            for (let type of test.split('|')) {
+                if (inputType === type) {
+                    return type;
+                }
+            }
+            return false;
+        }
+
         return test === inputType;
     }
 
@@ -706,4 +715,4 @@ const addTypeTest = (name, testUnit) => {
     throw new Error(`Type Error: "${name}" already exists`);
 };
 
-export { addTypeTest, testBuilder as default, testBuilder };
+export { addTypeTest, testBuilder as default, testBuilder, typesMap };
