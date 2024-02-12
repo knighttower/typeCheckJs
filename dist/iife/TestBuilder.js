@@ -715,7 +715,7 @@ var TestBuilder = (function (exports) {
             return true;
         }
 
-        throw new Error(`Type Error: "${name}" already exists`);
+        return `"${name}" already exists!`;
     };
 
     exports.addTypeTest = addTypeTest;

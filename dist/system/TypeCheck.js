@@ -719,7 +719,7 @@ System.register('TypeCheck', [], (function (exports) {
                     return true;
                 }
 
-                throw new Error(`Type Error: "${name}" already exists`);
+                return `"${name}" already exists!`;
             });
 
             // Error collectot

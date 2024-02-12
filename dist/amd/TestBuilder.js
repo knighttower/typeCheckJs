@@ -714,7 +714,7 @@ define(['exports'], (function (exports) { 'use strict';
             return true;
         }
 
-        throw new Error(`Type Error: "${name}" already exists`);
+        return `"${name}" already exists!`;
     };
 
     exports.addTypeTest = addTypeTest;

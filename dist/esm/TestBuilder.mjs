@@ -712,7 +712,7 @@ const addTypeTest = (name, testUnit) => {
         return true;
     }
 
-    throw new Error(`Type Error: "${name}" already exists`);
+    return `"${name}" already exists!`;
 };
 
 export { addTypeTest, testBuilder as default, testBuilder, typesMap };

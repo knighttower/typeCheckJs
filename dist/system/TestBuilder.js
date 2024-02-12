@@ -722,7 +722,7 @@ System.register('TestBuilder', [], (function (exports) {
                     return true;
                 }
 
-                throw new Error(`Type Error: "${name}" already exists`);
+                return `"${name}" already exists!`;
             });
 
         })
