@@ -59,7 +59,7 @@
     "url": "git://github.com/knighttower/typeCheckJs.git"
   },
   "dependencies": {
-    "@knighttower/js-utility-functions": "^4.2.8"
+    "@knighttower/js-utility-functions": "^4.2.9"
   },
   "devDependencies": {
     "@babel/core": "^7.23.5",
