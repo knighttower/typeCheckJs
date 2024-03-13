@@ -1,6 +1,6 @@
 {
   "name": "@knighttower/type-check-js",
-  "version": "4.1.12",
+  "version": "4.1.13",
   "type": "module",
   "description": "TypeCheck JS",
   "main": "index.cjs",
@@ -59,7 +59,7 @@
     "url": "git://github.com/knighttower/typeCheckJs.git"
   },
   "dependencies": {
-    "@knighttower/js-utility-functions": "^4.2.0"
+    "@knighttower/js-utility-functions": "^4.2.8"
   },
   "devDependencies": {
     "@babel/core": "^7.23.5",
