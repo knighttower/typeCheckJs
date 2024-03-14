@@ -1,6 +1,19 @@
 # TypeCheck JS
 
+---
+# ATTENTION: This repo has been moved as part of a monorepo to -> https://github.com/knighttower/JsUtility
+
+---
+
+
+
 ## A simple type checker for JavaScript
+
+
+
+
+
+
 
 TypeCheck JS is a JavaScript library designed for fast and efficient type checking. Inspired by [gkz/type-check](https://github.com/gkz/type-check), this library aims to overcome the limitations and complexities associated with TypeScript. It offers a lightweight, memory-efficient, and easy-to-use solution for both basic and complex type-checking requirements.  
 [![release version](https://github.com/knighttower/typeCheckJs/actions/workflows/pre-release.yml/badge.svg)](https://github.com/knighttower/typeCheckJs/actions/workflows/pre-release.yml)
