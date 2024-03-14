@@ -1,7 +1,8 @@
 # TypeCheck JS
 
 ---
-# ATTENTION: This repo has been moved as part of a monorepo to -> https://github.com/knighttower/JsUtility
+# ATTENTION: 
+This repo has been moved as part of a monorepo to -> https://github.com/knighttower/JsUtility
 
 ---
 
